@@ -69,6 +69,7 @@
         </div>
         @endif
 
+        @if($myLessons->isNotEmpty() || in_array(auth()->user()->role, \App\Models\User::TEACHING_ROLES))
         <div class="panel">
             <div class="panel-head"><h2>My subjects</h2><span class="hint">{{ $myLessons->count() }} {{ Str::plural('class', $myLessons->count()) }}</span></div>
             <div class="table-wrap"><table class="table">
@@ -89,6 +90,7 @@
                 </tbody>
             </table></div>
         </div>
+        @endif
 
         @if ($me->isSchoolLeader() && isset($noClassTeacher) && ($noClassTeacher->isNotEmpty() || $noTeacher))
         <div class="panel">
