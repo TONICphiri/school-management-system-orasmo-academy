@@ -9,6 +9,7 @@
     <div class="actions"><a class="btn" href="{{ route('supervisor.inspections.create', $school) }}">{{ icon('clipboard', 16) }} Record inspection visit</a></div>
 </div>
 @include('supervisor._stats')
+@include('supervisor._exams')
 <div class="panel">
     <div class="panel-head"><h2>Classes</h2><span class="hint">{{ $stats['term']?->label() }}</span></div>
     <div class="table-wrap"><table class="table">

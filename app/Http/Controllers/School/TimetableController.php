@@ -51,7 +51,7 @@ class TimetableController extends Controller
             'selectedClass' => $selectedClass,
             'conflicts' => $term ? Timetable::conflicts($term) : [],
             'slotCount' => $term ? TimetableSlot::where('term_id', $term->id)->count() : 0,
-            'canManage' => $user->role === 'FACILITY_ADMIN',
+            'canManage' => $user->isSchoolAdmin(),
         ]);
     }
 

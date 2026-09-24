@@ -58,10 +58,11 @@ Route::middleware(['auth', 'ready'])->group(function () {
 
     // School tenant
     Route::prefix('school')->name('school.')->group(function () {
-        $leaders = 'role:FACILITY_ADMIN,DEPUTY_HEAD,DEPUTY_HEAD_ACADEMIC,DEPUTY_HEAD_ADMIN';
-        $staff = 'role:FACILITY_ADMIN,DEPUTY_HEAD,DEPUTY_HEAD_ACADEMIC,DEPUTY_HEAD_ADMIN,SECTION_HEAD,HEAD_OF_DEPARTMENT,CLASS_TEACHER,FORM_MASTER,SUBJECT_TEACHER';
+        $leaders = 'role:FACILITY_ADMIN,SCHOOL_ADMIN,DEPUTY_HEAD,DEPUTY_HEAD_ACADEMIC,DEPUTY_HEAD_ADMIN';
+        $staff = 'role:FACILITY_ADMIN,SCHOOL_ADMIN,DEPUTY_HEAD,DEPUTY_HEAD_ACADEMIC,DEPUTY_HEAD_ADMIN,SECTION_HEAD,HEAD_OF_DEPARTMENT,CLASS_TEACHER,FORM_MASTER,SUBJECT_TEACHER';
 
-        Route::middleware('role:FACILITY_ADMIN')->group(function () {
+        // School System Administrator work. The head teacher can always do this; a school may also have a separate administrator.
+        Route::middleware('role:FACILITY_ADMIN,SCHOOL_ADMIN')->group(function () {
             Route::post('/calendar/years', [School\CalendarController::class, 'storeYear'])->name('calendar.years');
             Route::post('/calendar/terms', [School\CalendarController::class, 'storeTerm'])->name('calendar.terms');
             Route::post('/calendar/terms/{term}/current', [School\CalendarController::class, 'makeCurrent'])->name('calendar.current');
@@ -90,16 +91,17 @@ Route::middleware(['auth', 'ready'])->group(function () {
             Route::post('/subjects', [School\SubjectController::class, 'store'])->name('subjects.store');
 
             Route::post('/timetable/generate', [School\TimetableController::class, 'generate'])->name('timetable.generate');
-            Route::post('/results/{class}/release', [School\ResultController::class, 'release'])->name('results.release');
             Route::get('/audit', [School\FeedbackController::class, 'audit'])->name('audit');
+
+            Route::post('/finance', [School\FinanceController::class, 'store'])->name('finance.store');
+            Route::delete('/finance/{entry}', [School\FinanceController::class, 'destroy'])->name('finance.destroy');
+        });
+
+        Route::middleware('role:FACILITY_ADMIN')->group(function () {
+            Route::post('/results/{class}/release', [School\ResultController::class, 'release'])->name('results.release');
         });
 
         Route::middleware($leaders)->group(function () {
-            Route::get('/students/create', [School\StudentController::class, 'create'])->name('students.create');
-            Route::post('/students', [School\StudentController::class, 'store'])->name('students.store');
-            Route::get('/students/{student}/edit', [School\StudentController::class, 'edit'])->name('students.edit');
-            Route::put('/students/{student}', [School\StudentController::class, 'update'])->name('students.update');
-            Route::post('/students/{student}/electives', [School\StudentController::class, 'electives'])->name('students.electives');
             Route::get('/maneb', [School\ManebController::class, 'index'])->name('maneb.index');
             Route::post('/maneb/export', [School\ManebController::class, 'export'])->name('maneb.export');
             Route::post('/maneb/numbers', [School\ManebController::class, 'numbers'])->name('maneb.numbers');
@@ -121,6 +123,13 @@ Route::middleware(['auth', 'ready'])->group(function () {
             Route::get('/classes/{class}', [School\ClassController::class, 'show'])->name('classes.show');
             Route::get('/subjects', [School\SubjectController::class, 'index'])->name('subjects.index');
             Route::get('/students', [School\StudentController::class, 'index'])->name('students.index');
+            // Class owners register into their own class, subject teachers into classes they teach. Checked in the controller.
+            Route::get('/students/create', [School\StudentController::class, 'create'])->name('students.create');
+            Route::post('/students', [School\StudentController::class, 'store'])->name('students.store');
+            Route::get('/students/{student}/edit', [School\StudentController::class, 'edit'])->name('students.edit');
+            Route::put('/students/{student}', [School\StudentController::class, 'update'])->name('students.update');
+            Route::post('/students/{student}/electives', [School\StudentController::class, 'electives'])->name('students.electives');
+            Route::post('/students/{student}/history', [School\StudentController::class, 'addHistory'])->name('students.history');
             Route::get('/timetable', [School\TimetableController::class, 'index'])->name('timetable.index');
 
             Route::get('/attendance/{class}', [School\AttendanceController::class, 'edit'])->name('attendance.edit');
@@ -140,9 +149,11 @@ Route::middleware(['auth', 'ready'])->group(function () {
         });
 
         Route::get('/students/{student}', [School\StudentController::class, 'show'])->name('students.show');
+        Route::get('/students/{student}/card', [School\StudentController::class, 'card'])->name('students.card');
+        Route::get('/finance', [School\FinanceController::class, 'index'])->name('finance.index')->middleware('role:FACILITY_ADMIN,SCHOOL_ADMIN,DEPUTY_HEAD_ADMIN,DEPUTY_HEAD,GOVERNANCE');
         Route::get('/reports/{student}', [School\ReportController::class, 'card'])->name('reports.card');
 
-        Route::middleware('role:GOVERNANCE,FACILITY_ADMIN')->group(function () {
+        Route::middleware('role:GOVERNANCE,FACILITY_ADMIN,SCHOOL_ADMIN')->group(function () {
             Route::get('/feedback', [School\FeedbackController::class, 'index'])->name('feedback.index');
         });
         Route::middleware('role:GOVERNANCE')->group(function () {

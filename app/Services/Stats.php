@@ -90,4 +90,52 @@ class Stats
     {
         return self::jurisdiction($user)->whereKey($school->id)->exists();
     }
+
+    /**
+     * National examination readiness for one school in the current term, based on the school's
+     * own results: PSLCE (Standard 8 average of 40 or more), JCE (six passes including English)
+     * and MSCE (six credits including English). Read without the tenant scope for supervisors.
+     */
+    public static function examPerformance(School $school): array
+    {
+        $term = $school->currentTerm();
+        $year = $school->currentYear();
+        if (! $term || ! $year) {
+            return [];
+        }
+        $levels = \App\Models\Level::withoutGlobalScopes()->where('school_id', $school->id)->whereNotNull('national_exam')->get()->keyBy('id');
+        $classes = \App\Models\SchoolClass::withoutGlobalScopes()->with(['level' => fn ($q) => $q->withoutGlobalScopes(), 'classSubjects' => fn ($q) => $q->withoutGlobalScopes()->with(['subject' => fn ($s) => $s->withoutGlobalScopes()])])
+            ->where('school_id', $school->id)->where('academic_year_id', $year->id)->whereIn('level_id', $levels->keys())->get();
+
+        $out = [];
+        foreach ($classes as $class) {
+            $exam = $class->level->national_exam;
+            $out[$exam] ??= ['exam' => $exam, 'candidates' => 0, 'with_marks' => 0, 'eligible' => 0, 'girls' => 0, 'girls_eligible' => 0];
+            $results = \App\Services\Grading::classResults($class, $term);
+            foreach ($results['learners'] as $l) {
+                $row = &$out[$exam];
+                $row['candidates']++;
+                $girl = $l['student']->gender === 'Female';
+                $row['girls'] += $girl ? 1 : 0;
+                if ($l['average'] === null) {
+                    unset($row);
+                    continue;
+                }
+                $row['with_marks']++;
+                $ok = $exam === 'PSLCE' ? $l['average'] >= 40 : (bool) ($l['exam_eligible'] ?? false);
+                $row['eligible'] += $ok ? 1 : 0;
+                $row['girls_eligible'] += ($ok && $girl) ? 1 : 0;
+                unset($row);
+            }
+        }
+        foreach ($out as &$row) {
+            $row['rate'] = $row['with_marks'] ? round($row['eligible'] / $row['with_marks'] * 100, 1) : null;
+            $row['girls_rate'] = $row['girls'] && $row['with_marks'] ? round($row['girls_eligible'] / max(1, $row['girls']) * 100, 1) : null;
+        }
+        unset($row);
+        $order = ['PSLCE' => 1, 'JCE' => 2, 'MSCE' => 3];
+        uksort($out, fn ($a, $b) => ($order[$a] ?? 9) <=> ($order[$b] ?? 9));
+
+        return $out;
+    }
 }

@@ -11,8 +11,10 @@ use App\Models\Department;
 use App\Models\District;
 use App\Models\Division;
 use App\Models\FeedbackItem;
+use App\Models\FinanceEntry;
 use App\Models\GovernanceMembership;
 use App\Models\InspectionReport;
+use App\Models\LearnerSchoolHistory;
 use App\Models\Level;
 use App\Models\Mark;
 use App\Models\Notice;
@@ -206,12 +208,37 @@ class DatabaseSeeder extends Seeder
                 'home_village' => $v[0],
                 'traditional_authority' => $v[1],
                 'home_district' => $v[2],
+                'physical_address' => $this->address($school),
+                'emergency_contact_name' => $this->randomName()[0].' '.$last,
+                'emergency_contact_relationship' => ['Aunt', 'Uncle', 'Grandmother', 'Elder brother', 'Elder sister'][mt_rand(0, 4)],
+                'emergency_contact_phone' => $this->phone(),
                 'status' => 'ENROLLED',
                 'admitted_on' => Carbon::create(2026 - max(0, $ageAtStart - 6), 9, 14)->toDateString(),
             ]);
         }
 
         return $out;
+    }
+
+    protected function address(School $school): string
+    {
+        $areas = $school->code === 'BC0412'
+            ? ['Chilomoni Ward', 'Chilomoni Mkwinda', 'Chinseu', 'Mzedi', 'Chilomoni Chakwera']
+            : ['Lunzu Trading Centre', 'Mdeka', 'Kameza', 'Chileka Road', 'Lunzu Township'];
+        $marks = ['near the health centre', 'behind the CCAP church', 'next to the maize mill', 'near the borehole', 'opposite the market'];
+
+        return 'House '.mt_rand(3, 240).', '.$areas[mt_rand(0, count($areas) - 1)].', '.$marks[mt_rand(0, count($marks) - 1)].', Blantyre';
+    }
+
+    protected function finance(School $school, User $by, array $lines): void
+    {
+        $term = $school->currentTerm();
+        foreach ($lines as [$type, $category, $description, $amount, $date, $ref]) {
+            FinanceEntry::create([
+                'school_id' => $school->id, 'term_id' => $term->id, 'type' => $type, 'category' => $category,
+                'description' => $description, 'amount' => $amount, 'entry_date' => $date, 'reference' => $ref, 'recorded_by' => $by->id,
+            ]);
+        }
     }
 
     protected function parents(School $school, array $students, int $every = 2): void
@@ -439,6 +466,16 @@ class DatabaseSeeder extends Seeder
             'body' => 'Esnart Chunga (Primary Education Advisor) submitted the report of the visit on 17 Sep 2026.', 'priority' => 'NORMAL',
             'created_at' => now()->subDays(6)]);
 
+        $this->finance($school, $head, [
+            ['INCOME', 'SIG', 'School Improvement Grant, first tranche 2026/2027', 3200000, '2026-09-15', 'SIG 26/01'],
+            ['INCOME', 'PTA', 'PTA development contributions, Standards 1 to 8', 865000, '2026-09-18', 'PTA RB 201 to 455'],
+            ['INCOME', 'DONATION', 'Exercise books from Mary\'s Meals partner visit', 420000, '2026-09-21', 'DN 03'],
+            ['EXPENDITURE', 'TLM', 'Chichewa and English readers for Standards 1 and 2', 1140000, '2026-09-16', 'PV 0108'],
+            ['EXPENDITURE', 'MAINTENANCE', 'Roof repairs on Standard 3 block before the rains', 980000, '2026-09-19', 'PV 0109'],
+            ['EXPENDITURE', 'FEEDING', 'Firewood and utensils for the feeding programme', 215000, '2026-09-22', 'PV 0110'],
+            ['EXPENDITURE', 'ADMIN', 'Registers, chalk and office stationery', 138500, '2026-09-23', 'PV 0111'],
+        ]);
+
         return $school;
     }
 
@@ -460,6 +497,8 @@ class DatabaseSeeder extends Seeder
         $n = 0;
         $head = $this->staff($school, $domain, 'Hastings Mkandawire', 'Male', 'FACILITY_ADMIN', 'MASTERS', 'Educational Leadership', $n++);
         $academic = $this->staff($school, $domain, 'Chimwemwe Phiri', 'Female', 'DEPUTY_HEAD_ACADEMIC', 'BACHELOR', 'Mathematics', $n++);
+        // Separate School System Administrator (ICT officer) who handles staff registration and set up
+        $sysAdmin = $this->staff($school, $domain, 'Thokozani Banda', 'Male', 'SCHOOL_ADMIN', 'DIPLOMA', 'ICT and records', $n++);
         $this->staff($school, $domain, 'Moses Chiwaya', 'Male', 'DEPUTY_HEAD_ADMIN', 'BACHELOR', 'Geography', $n++);
         $hodSci = $this->staff($school, $domain, 'Kondwani Jere', 'Male', 'HEAD_OF_DEPARTMENT', 'BACHELOR', 'Biology and Chemistry', $n++);
         $hodHum = $this->staff($school, $domain, 'Tamanda Moyo', 'Female', 'HEAD_OF_DEPARTMENT', 'BACHELOR', 'History', $n++);
@@ -560,6 +599,28 @@ class DatabaseSeeder extends Seeder
         User::where('school_id', $school->id)->where('name', 'Peter Chilima')->update(['email' => 'bog.lunzu@gmail.com']);
 
         Timetable::generate($term);
+
+        $this->finance($school, $sysAdmin, [
+            ['INCOME', 'ORT', 'Government ORT funding, first quarter', 4850000, '2026-09-15', 'GOV 26/Q1'],
+            ['INCOME', 'FEES', 'General purpose fund, Forms 1 to 4', 6120000, '2026-09-18', 'RB 1022 to 1310'],
+            ['INCOME', 'DEVELOPMENT', 'Development fund contributions', 2340000, '2026-09-18', 'RB 1311 to 1420'],
+            ['INCOME', 'DONATION', 'Laboratory chemicals from Blantyre Synod Education Trust', 750000, '2026-09-21', 'DN 07'],
+            ['EXPENDITURE', 'TLM', 'MSCE revision books for Form 4 Biology and Chemistry', 1680000, '2026-09-16', 'PV 0311'],
+            ['EXPENDITURE', 'EXAMS', 'Printing of beginning of term tests', 425000, '2026-09-17', 'PV 0312'],
+            ['EXPENDITURE', 'UTILITIES', 'ESCOM electricity, August bill', 612500, '2026-09-19', 'PV 0313'],
+            ['EXPENDITURE', 'UTILITIES', 'Blantyre Water Board, August bill', 287300, '2026-09-19', 'PV 0314'],
+            ['EXPENDITURE', 'MAINTENANCE', 'Replacing 24 broken window panes in Form 2 block', 368000, '2026-09-22', 'PV 0315'],
+            ['EXPENDITURE', 'SPORTS', 'Transport for football team to Chileka zone games', 180000, '2026-09-23', 'PV 0316'],
+        ]);
+
+        // Form 1 learners came from primary schools in the zone
+        $feeders = [['Chilomoni Primary School', 'BC0412'], ['Lunzu Primary School', 'BR0218'], ['Mdeka Primary School', 'BR0233'], ['Kameza Full Primary School', 'BC0425']];
+        $form1 = SchoolClass::where('school_id', $school->id)->whereHas('level', fn ($q) => $q->where('phase', 'SECONDARY')->where('ordinal', 1))->pluck('id');
+        foreach (Student::where('school_id', $school->id)->whereIn('school_class_id', $form1)->get() as $i => $st) {
+            $f = $feeders[$i % count($feeders)];
+            LearnerSchoolHistory::create(['school_id' => $school->id, 'student_id' => $st->id, 'school_name' => $f[0], 'school_code' => $f[1],
+                'last_class' => 'Standard 8', 'year_left' => 2026, 'reason' => 'Completed PSLCE, selected to Lunzu CDSS']);
+        }
 
         Notice::create(['user_id' => $academic->id, 'school_id' => $school->id, 'category' => 'RESULTS', 'title' => 'Form 4A reviewed by form master',
             'body' => 'Kelvin Chunga reviewed all subjects for Form 4A. Your approval is needed before the head can release.', 'link' => '/school/results', 'priority' => 'HIGH',

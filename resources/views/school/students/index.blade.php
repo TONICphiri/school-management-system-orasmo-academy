@@ -3,7 +3,7 @@
 @section('content')
 <div class="page-head">
     <div><h1>Learners</h1><div class="sub">{{ $students->total() }} records. Learner details are visible only to school leaders and the learner's own class teacher.</div></div>
-    @if($canManage)<div class="actions"><a class="btn" href="{{ route('school.students.create') }}">{{ icon('plus', 16) }} Enrol a learner</a></div>@endif
+    @if($canRegister)<div class="actions"><a class="btn" href="{{ route('school.students.create') }}">{{ icon('plus', 16) }} Register a learner</a></div>@endif
 </div>
 <div class="panel">
     <form class="panel-body filters" method="GET">

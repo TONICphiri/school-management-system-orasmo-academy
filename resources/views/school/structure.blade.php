@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'School structure')
 @section('content')
-@php $admin = auth()->user()->role === 'FACILITY_ADMIN'; $secondary = $school->type !== 'PRIMARY'; $primary = $school->type !== 'SECONDARY'; @endphp
+@php $admin = auth()->user()->isSchoolAdmin(); $secondary = $school->type !== 'PRIMARY'; $primary = $school->type !== 'SECONDARY'; @endphp
 <div class="page-head"><div><h1>School structure</h1><div class="sub">{{ $school->typeLabel() }} school on the {{ $school->structure }} structure</div></div></div>
 
 <div class="panel">

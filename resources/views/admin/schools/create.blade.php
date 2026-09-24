@@ -34,13 +34,19 @@
     </div>
 
     <div class="panel">
-        <div class="panel-head"><h2>Head teacher account</h2><span class="hint">The head teacher becomes the facility administrator for this school</span></div>
+        <div class="panel-head"><h2>School System Administrator</h2><span class="hint">This person registers staff, classes and subjects once the account is active</span></div>
         <div class="panel-body">
             <div class="form-grid">
+                <div class="field full"><label>Who will administer the school system?</label>
+                    <div class="checks">
+                        <label class="check"><input type="radio" name="admin_role" value="FACILITY_ADMIN" @checked(old('admin_role', 'FACILITY_ADMIN') === 'FACILITY_ADMIN')> The head teacher, acting as system administrator</label>
+                        <label class="check"><input type="radio" name="admin_role" value="SCHOOL_ADMIN" @checked(old('admin_role') === 'SCHOOL_ADMIN')> A separate School System Administrator, who then registers the head teacher</label>
+                    </div>
+                </div>
                 <div class="field"><label>Full name</label><input type="text" name="admin_name" value="{{ old('admin_name') }}" required></div>
                 <div class="field"><label>National ID number</label><input type="text" name="admin_national_id" value="{{ old('admin_national_id') }}" required></div>
                 <div class="field"><label>Gender</label><select name="admin_gender"><option @selected(old('admin_gender') === 'Female')>Female</option><option @selected(old('admin_gender') === 'Male')>Male</option></select></div>
-                <div class="field">
+                <div class="field" data-show-when="admin_role=FACILITY_ADMIN">
                     <label>Highest teaching qualification</label>
                     <select name="admin_qualification">
                         @foreach (\App\Models\TeacherProfile::QUALIFICATIONS as $k => $v)<option value="{{ $k }}" @selected(old('admin_qualification', 'DIPLOMA') === $k)>{{ $v }}</option>@endforeach

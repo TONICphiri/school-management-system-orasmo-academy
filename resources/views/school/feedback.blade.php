@@ -20,7 +20,7 @@
                     <p class="small muted" style="margin-bottom:0">Escalated to {{ $f->escalatedTo?->name ?? 'the education office' }} on {{ $f->escalated_at->format('j M Y') }}.</p>
                 @endif
             </div>
-            @if (! $gov && ! in_array($f->status, ['RESOLVED', 'CLOSED', 'ESCALATED']))
+            @if ($user->role === 'FACILITY_ADMIN' && ! in_array($f->status, ['RESOLVED', 'CLOSED', 'ESCALATED']))
                 <form method="POST" action="{{ route('school.feedback.respond', $f) }}" class="panel-foot" style="display:block">@csrf
                     <div class="field" style="margin-bottom:.6rem"><label>Your response</label><textarea name="response" rows="3" required></textarea></div>
                     <div class="inline-form" style="justify-content:space-between"><label class="check"><input type="checkbox" name="resolve" value="1"> Mark as resolved</label><button class="btn" type="submit">Send response</button></div>

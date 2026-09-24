@@ -56,7 +56,7 @@ class InspectionController extends Controller
         Notifier::send(Notifier::systemAdmins(), 'INSPECTION', 'Inspection report for '.$school->name,
             'Routed to the '.$report->directorate.'. Rating: '.self::RATINGS[$report->overall_rating].($report->flag_follow_up ? '. Flagged for follow-up by '.$report->follow_up_by->format('j M Y') : '').'.',
             route('admin.inspections'), $priority);
-        Notifier::send(Notifier::schoolRoles($school->id, ['FACILITY_ADMIN']), 'INSPECTION', 'Inspection report received',
+        Notifier::send(Notifier::schoolRoles($school->id, \App\Models\User::ADMIN_ROLES), 'INSPECTION', 'Inspection report received',
             $request->user()->name.' ('.$request->user()->roleLabel().') submitted the report of the visit on '.$report->visit_date->format('j M Y').'.', null, $priority, ['APP', 'PREFERRED']);
 
         return redirect()->route('supervisor.inspections.show', $report)->with('status', 'Inspection report submitted to the '.$report->directorate.'.');

@@ -27,17 +27,24 @@ class StaffController extends Controller
             $roles = array_merge($roles, User::SECONDARY_STAFF_ROLES);
         }
 
+        // The school system administrator is a non-teaching role, for example the ICT or bursar's office.
+        $roles[] = 'SCHOOL_ADMIN';
+        // A separate administrator set up by the Ministry registers the head teacher if the school has none yet.
+        if (! User::where('school_id', $school->id)->where('role', 'FACILITY_ADMIN')->exists()) {
+            array_unshift($roles, 'FACILITY_ADMIN');
+        }
+
         return collect(array_unique($roles))->mapWithKeys(fn ($r) => [$r => User::ROLES[$r]])->all();
     }
 
     protected function findStaff($id): User
     {
-        return User::where('school_id', current_school()->id)->whereIn('role', User::TEACHING_ROLES)->findOrFail($id);
+        return User::where('school_id', current_school()->id)->whereIn('role', User::STAFF_ROLES)->findOrFail($id);
     }
 
     public function index(Request $request)
     {
-        $q = User::with(['teacherProfile', 'committees'])->where('school_id', current_school()->id)->whereIn('role', User::TEACHING_ROLES);
+        $q = User::with(['teacherProfile', 'committees'])->where('school_id', current_school()->id)->whereIn('role', User::STAFF_ROLES);
         if ($request->filled('role')) {
             $q->where('role', $request->query('role'));
         }
@@ -47,7 +54,7 @@ class StaffController extends Controller
         $year = current_school()->currentYear();
 
         return view('school.staff.index', [
-            'staff' => $q->orderByRaw("FIELD(role, 'FACILITY_ADMIN','DEPUTY_HEAD','DEPUTY_HEAD_ACADEMIC','DEPUTY_HEAD_ADMIN','SECTION_HEAD','HEAD_OF_DEPARTMENT','FORM_MASTER','CLASS_TEACHER','SUBJECT_TEACHER')")->orderBy('name')->get(),
+            'staff' => $q->orderByRaw("FIELD(role, 'FACILITY_ADMIN','SCHOOL_ADMIN','DEPUTY_HEAD','DEPUTY_HEAD_ACADEMIC','DEPUTY_HEAD_ADMIN','SECTION_HEAD','HEAD_OF_DEPARTMENT','FORM_MASTER','CLASS_TEACHER','SUBJECT_TEACHER')")->orderBy('name')->get(),
             'roles' => $this->roleOptions(),
             'classOf' => $year ? SchoolClass::with('level')->where('academic_year_id', $year->id)->whereNotNull('class_teacher_id')->get()->keyBy('class_teacher_id') : collect(),
             'loads' => ClassSubject::selectRaw('teacher_id, count(*) as lessons, sum(periods_per_week) as periods')->whereNotNull('teacher_id')->groupBy('teacher_id')->get()->keyBy('teacher_id'),
@@ -128,6 +135,7 @@ class StaffController extends Controller
     public function update(Request $request, $id)
     {
         $user = $this->findStaff($id);
+        abort_if($user->role === 'FACILITY_ADMIN' && $user->id !== auth()->id(), 403);
         $rules = $this->rules($user);
         if ($user->role === 'FACILITY_ADMIN') {
             $rules['role'] = 'required|in:FACILITY_ADMIN';
@@ -174,6 +182,7 @@ class StaffController extends Controller
     {
         $user = $this->findStaff($id);
         abort_if($user->id === auth()->id(), 422, 'You cannot suspend your own account.');
+        abort_if($user->role === 'FACILITY_ADMIN', 403, 'Only the Ministry can suspend a head teacher.');
         $new = $user->status === 'SUSPENDED' ? ($user->activated_at ? 'ACTIVE' : 'PENDING_ACTIVATION') : 'SUSPENDED';
         $user->update(['status' => $new]);
         Audit::log('user.status', ($new === 'SUSPENDED' ? 'Suspended ' : 'Restored ').$user->name, $user);

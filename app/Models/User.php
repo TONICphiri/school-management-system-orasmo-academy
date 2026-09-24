@@ -28,6 +28,7 @@ class User extends Authenticatable
     public const ROLES = [
         'SYSTEM_ADMIN' => 'System Administrator',
         'FACILITY_ADMIN' => 'Head Teacher',
+        'SCHOOL_ADMIN' => 'School System Administrator',
         'DEPUTY_HEAD' => 'Deputy Head Teacher',
         'DEPUTY_HEAD_ACADEMIC' => 'Deputy Head (Academic)',
         'DEPUTY_HEAD_ADMIN' => 'Deputy Head (Administration)',
@@ -47,6 +48,8 @@ class User extends Authenticatable
     public const PRIMARY_STAFF_ROLES = ['DEPUTY_HEAD', 'SECTION_HEAD', 'CLASS_TEACHER', 'SUBJECT_TEACHER'];
     public const SECONDARY_STAFF_ROLES = ['DEPUTY_HEAD_ACADEMIC', 'DEPUTY_HEAD_ADMIN', 'HEAD_OF_DEPARTMENT', 'FORM_MASTER', 'SUBJECT_TEACHER'];
     public const TEACHING_ROLES = ['FACILITY_ADMIN', 'DEPUTY_HEAD', 'DEPUTY_HEAD_ACADEMIC', 'DEPUTY_HEAD_ADMIN', 'SECTION_HEAD', 'HEAD_OF_DEPARTMENT', 'CLASS_TEACHER', 'FORM_MASTER', 'SUBJECT_TEACHER'];
+    public const ADMIN_ROLES = ['FACILITY_ADMIN', 'SCHOOL_ADMIN'];
+    public const STAFF_ROLES = ['FACILITY_ADMIN', 'SCHOOL_ADMIN', 'DEPUTY_HEAD', 'DEPUTY_HEAD_ACADEMIC', 'DEPUTY_HEAD_ADMIN', 'SECTION_HEAD', 'HEAD_OF_DEPARTMENT', 'CLASS_TEACHER', 'FORM_MASTER', 'SUBJECT_TEACHER'];
     public const DEPUTY_ROLES = ['DEPUTY_HEAD', 'DEPUTY_HEAD_ACADEMIC', 'DEPUTY_HEAD_ADMIN'];
     public const SUPERVISOR_ROLES = ['EDM', 'DEM', 'PEA'];
 
@@ -74,7 +77,26 @@ class User extends Authenticatable
     public function isSystemAdmin(): bool { return $this->role === 'SYSTEM_ADMIN'; }
     public function isSupervisor(): bool { return in_array($this->role, self::SUPERVISOR_ROLES, true); }
     public function isTeachingStaff(): bool { return in_array($this->role, self::TEACHING_ROLES, true); }
-    public function isSchoolLeader(): bool { return $this->role === 'FACILITY_ADMIN' || in_array($this->role, self::DEPUTY_ROLES, true); }
+    public function isSchoolLeader(): bool { return in_array($this->role, self::ADMIN_ROLES, true) || in_array($this->role, self::DEPUTY_ROLES, true); }
+    public function isSchoolAdmin(): bool { return in_array($this->role, self::ADMIN_ROLES, true); }
+    public function isSchoolStaff(): bool { return in_array($this->role, self::STAFF_ROLES, true); }
+
+    /** Classes this user owns (class teacher or form master) in the current year. */
+    public function ownedClassIds()
+    {
+        $year = $this->school?->currentYear();
+
+        return SchoolClass::where('class_teacher_id', $this->id)->when($year, fn ($q) => $q->where('academic_year_id', $year->id))->pluck('id');
+    }
+
+    /** Classes this user teaches at least one subject in. */
+    public function taughtClassIds()
+    {
+        $year = $this->school?->currentYear();
+        $ids = ClassSubject::where('teacher_id', $this->id)->distinct()->pluck('school_class_id');
+
+        return $year ? SchoolClass::whereIn('id', $ids)->where('academic_year_id', $year->id)->pluck('id') : $ids;
+    }
 
     public function canSeeStudentPii(Student $student): bool
     {
@@ -88,7 +110,12 @@ class User extends Authenticatable
             return (int) $student->user_id === (int) $this->id;
         }
 
-        return $student->schoolClass && (int) $student->schoolClass->class_teacher_id === (int) $this->id;
+        if (! $student->schoolClass || (int) $student->school_id !== (int) $this->school_id) {
+            return false;
+        }
+        // The class owner has full access. A subject teacher sees learners in the classes they teach.
+        return (int) $student->schoolClass->class_teacher_id === (int) $this->id
+            || ClassSubject::where('teacher_id', $this->id)->where('school_class_id', $student->school_class_id)->exists();
     }
 
     public function unreadNoticeCount(): int

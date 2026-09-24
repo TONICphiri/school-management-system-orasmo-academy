@@ -4,8 +4,8 @@
         $active = request()->routeIs($pattern ?? $route);
         return '<a href="'.route($route, $params).'" class="'.($active ? 'active' : '').'">'.icon($icon).'<span>'.e($label).'</span>'.($count ? '<span class="count">'.$count.'</span>' : '').'</a>';
     };
-    $leader = $u->hasRole('FACILITY_ADMIN', ...\App\Models\User::DEPUTY_ROLES);
-    $head = $u->role === 'FACILITY_ADMIN';
+    $leader = $u->isSchoolLeader();
+    $admin = $u->isSchoolAdmin();
 @endphp
 <nav class="nav">
     {!! $link('dashboard', 'Overview', 'home') !!}
@@ -22,14 +22,16 @@
         <div class="nav-group">Supervision</div>
         {!! $link('supervisor.inspections.index', 'Inspection reports', 'clipboard', 'supervisor.inspections.*') !!}
         {!! $link('supervisor.escalations', 'Escalated concerns', 'flag') !!}
-    @elseif ($u->isTeachingStaff())
-        <div class="nav-group">Teaching</div>
-        {!! $link('school.marks.index', 'Marks entry', 'edit', 'school.marks.*') !!}
-        {!! $link('school.results.index', 'Results and approval', 'check-square', 'school.results.*') !!}
-        {!! $link('school.timetable.index', 'Timetable', 'clock', 'school.timetable.*') !!}
+    @elseif ($u->isSchoolStaff())
+        @if ($u->isTeachingStaff())
+            <div class="nav-group">Teaching</div>
+            {!! $link('school.marks.index', 'Marks entry', 'edit', 'school.marks.*') !!}
+            {!! $link('school.results.index', 'Results and approval', 'check-square', 'school.results.*') !!}
+        @endif
         <div class="nav-group">School</div>
+        {!! $link('school.timetable.index', 'Timetable', 'clock', 'school.timetable.*') !!}
         {!! $link('school.classes.index', 'Classes', 'grid', 'school.classes.*') !!}
-        @if ($leader || \App\Models\SchoolClass::where('class_teacher_id', $u->id)->exists())
+        @if ($leader || $u->ownedClassIds()->isNotEmpty() || $u->taughtClassIds()->isNotEmpty())
             {!! $link('school.students.index', 'Learners', 'users', 'school.students.*') !!}
         @endif
         {!! $link('school.staff.index', 'Staff', 'user', 'school.staff.*') !!}
@@ -40,7 +42,11 @@
             <div class="nav-group">National examinations</div>
             {!! $link('school.maneb.index', 'MANEB candidates', 'award', 'school.maneb.*') !!}
         @endif
-        @if ($head)
+        @if ($admin || $u->hasRole('DEPUTY_HEAD', 'DEPUTY_HEAD_ADMIN'))
+            <div class="nav-group">Finance</div>
+            {!! $link('school.finance.index', 'Income and expenditure', 'wallet', 'school.finance.*') !!}
+        @endif
+        @if ($admin)
             <div class="nav-group">Governance and oversight</div>
             {!! $link('school.governance.index', 'SMC, PTA and Board', 'users', 'school.governance.index') !!}
             {!! $link('school.feedback.index', 'Concerns', 'message', 'school.feedback.*') !!}
@@ -49,6 +55,7 @@
     @elseif ($u->role === 'GOVERNANCE')
         <div class="nav-group">Governance</div>
         {!! $link('school.feedback.index', 'Concerns', 'message', 'school.feedback.*') !!}
+        {!! $link('school.finance.index', 'Financial summary', 'wallet', 'school.finance.*') !!}
         @if ($u->governance?->body === 'BOG')
             {!! $link('school.governance.audit', 'Audit log', 'shield') !!}
         @endif

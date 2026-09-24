@@ -272,7 +272,23 @@ textarea { min-height: 110px; resize: vertical; }
 .report .sign { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem; font-size: .85rem; }
 .report .sign div { border-top: 1px solid var(--ink); padding-top: .3rem; }
 
+/* Learner ID, QR code and printable learner card */
+.qr-block { display: flex; gap: 1.25rem; align-items: center; }
+.qr { flex: none; background: #fff; border: 1px solid var(--line); padding: .4rem; line-height: 0; }
+.qr svg { display: block; }
+.learner-uid { font-family: Consolas, "Courier New", monospace; font-size: 1.25rem; font-weight: 700; letter-spacing: .08em; }
+.print-page { background: var(--bg); padding: 2rem; }
+.print-bar { display: flex; gap: .5rem; justify-content: center; margin-bottom: 1.5rem; }
+.learner-card { width: 540px; margin: 0 auto; background: #fff; border: 1px solid var(--ink); }
+.learner-card-head { display: flex; align-items: center; gap: .75rem; background: var(--brand-dark); color: #fff; padding: .7rem 1rem; border-bottom: 5px solid var(--red); }
+.learner-card-head div { font-size: .8rem; line-height: 1.3; flex: 1; }
+.learner-card-head span { font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: .8rem; }
+.learner-card-body { display: flex; gap: 1rem; padding: 1rem; align-items: flex-start; }
+.learner-card-body .kv { grid-template-columns: 95px 1fr; font-size: .85rem; margin: 0; }
+.learner-card-foot { border-top: 1px solid var(--line); padding: .5rem 1rem; font-size: .72rem; color: var(--muted); }
+
 @media print {
+    .print-page { padding: 0; background: #fff; }
     .sidebar, .topbar, .no-print, .page-head .actions { display: none !important; }
     .shell { display: block; }
     body { background: #fff; }

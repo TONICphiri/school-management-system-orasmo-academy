@@ -25,13 +25,17 @@ class ClassController extends Controller
         $classes = $year ? SchoolClass::with(['level', 'section', 'classTeacher'])->withCount('students')
             ->where('academic_year_id', $year->id)->get()
             ->sortBy(fn ($c) => [$c->level->phase, $c->level->ordinal, $c->stream])->values() : collect();
+        if (! $this->seesAllClasses($user)) {
+            $mine = $user->ownedClassIds()->merge($user->taughtClassIds());
+            $classes = $classes->whereIn('id', $mine)->values();
+        }
 
         return view('school.classes.index', [
             'year' => $year,
             'classes' => $classes,
             'levels' => Level::orderBy('phase')->orderBy('ordinal')->get(),
             'teachers' => User::with('teacherProfile')->where('school_id', $school->id)->whereIn('role', User::TEACHING_ROLES)->where('status', '!=', 'SUSPENDED')->orderBy('name')->get(),
-            'canManage' => $user->role === 'FACILITY_ADMIN',
+            'canManage' => $user->isSchoolAdmin(),
         ]);
     }
 
@@ -159,8 +163,17 @@ class ClassController extends Controller
         return back()->with('status', 'Class details saved.');
     }
 
+    /** Leaders, section heads and heads of department oversee every class. Everyone else sees only classes they own or teach. */
+    protected function seesAllClasses(User $user): bool
+    {
+        return $user->isSchoolLeader() || $user->hasRole('SECTION_HEAD', 'HEAD_OF_DEPARTMENT');
+    }
+
     public function show(Request $request, SchoolClass $class)
     {
+        $me = $request->user();
+        abort_unless($this->seesAllClasses($me) || $class->class_teacher_id === $me->id || $me->taughtClassIds()->contains($class->id), 403,
+            'You can only open classes you own or teach.');
         $class->load(['level', 'section', 'classTeacher', 'classSubjects.subject.department', 'classSubjects.teacher.teacherProfile']);
         $school = current_school();
         $user = $request->user();
@@ -172,8 +185,8 @@ class ClassController extends Controller
             'electiveCounts' => \Illuminate\Support\Facades\DB::table('student_subjects')->whereIn('class_subject_id', $class->classSubjects->pluck('id'))
                 ->selectRaw('class_subject_id, count(*) as total')->groupBy('class_subject_id')->pluck('total', 'class_subject_id'),
             'teachers' => User::with('teacherProfile')->where('school_id', $school->id)->whereIn('role', User::TEACHING_ROLES)->where('status', '!=', 'SUSPENDED')->orderBy('name')->get(),
-            'canManage' => $user->role === 'FACILITY_ADMIN',
-            'canSeePii' => $user->isSchoolLeader() || $class->class_teacher_id === $user->id,
+            'canManage' => $user->isSchoolAdmin(),
+            'canSeePii' => $user->isSchoolLeader() || $class->class_teacher_id === $user->id || $user->taughtClassIds()->contains($class->id),
         ]);
     }
 

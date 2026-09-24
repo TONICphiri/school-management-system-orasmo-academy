@@ -38,6 +38,12 @@ class School extends Model
         return $this->hasOne(User::class)->where('role', 'FACILITY_ADMIN');
     }
 
+    /** The first School System Administrator account, created by the Ministry with the school. */
+    public function systemAdmin()
+    {
+        return $this->hasOne(User::class)->whereIn('role', User::ADMIN_ROLES)->oldest('id');
+    }
+
     public function currentYear(): ?AcademicYear
     {
         return AcademicYear::withoutGlobalScopes()->where('school_id', $this->id)->where('is_current', true)->first();

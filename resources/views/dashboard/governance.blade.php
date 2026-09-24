@@ -34,5 +34,16 @@
         </ul>
     </div>
 </div>
+@include('supervisor._exams', ['exams' => $exams])
+<div class="panel">
+    <div class="panel-head"><h2>Financial summary, {{ $stats['term']?->label() }}</h2><a class="small" href="{{ route('school.finance.index') }}">Full summary</a></div>
+    <div class="panel-body"><dl class="kv">
+        <dt>Income</dt><dd>{{ mwk($finance['total_income']) }}</dd>
+        <dt>Expenditure</dt><dd>{{ mwk($finance['total_expenditure']) }}</dd>
+        <dt>Balance</dt><dd>{{ mwk($finance['balance']) }}</dd>
+        <dt>Largest income</dt><dd>{{ $finance['income']->first() ? (\App\Models\FinanceEntry::INCOME[$finance['income']->first()->category] ?? '').', '.mwk($finance['income']->first()->total) : 'None recorded' }}</dd>
+        <dt>Largest spending</dt><dd>{{ $finance['expenditure']->first() ? (\App\Models\FinanceEntry::EXPENDITURE[$finance['expenditure']->first()->category] ?? '').', '.mwk($finance['expenditure']->first()->total) : 'None recorded' }}</dd>
+    </dl></div>
+</div>
 <p class="small muted">A term summary is sent to all SMC, PTA and Board members by SMS at the end of each term.</p>
 @endsection

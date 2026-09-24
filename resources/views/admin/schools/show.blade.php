@@ -7,7 +7,7 @@
     <div class="sub">{{ $school->code }} &middot; {{ $school->typeLabel() }} &middot; {{ $school->categoryLabel() }} &middot; {{ $school->structure }}</div></div>
     <div class="actions">
         <a class="btn secondary" href="{{ route('admin.schools.edit', $school) }}">{{ icon('edit', 16) }} Edit details</a>
-        @if ($head && $head->status === 'PENDING_ACTIVATION')
+        @if ($sysadmin && $sysadmin->status === 'PENDING_ACTIVATION')
             <form method="POST" action="{{ route('admin.schools.resend', $school) }}">@csrf<button class="btn" type="submit">{{ icon('send', 16) }} Resend activation</button></form>
         @endif
     </div>
@@ -31,7 +31,8 @@
                     <dt>MANEB centre</dt><dd>{{ $school->maneb_centre_number ?: 'Not set' }}</dd>
                     <dt>Address</dt><dd>{{ $school->postal_address ?: 'Not set' }}</dd>
                     <dt>Contact</dt><dd>{{ collect([$school->phone, $school->email])->filter()->implode(', ') ?: 'Not set' }}</dd>
-                    <dt>Head teacher</dt><dd>@if($head){{ $head->name }} <span class="badge {{ status_tone($head->status) }}">{{ label($head->status) }}</span>@else Not assigned @endif</dd>
+                    <dt>Head teacher</dt><dd>@if($head){{ $head->name }} <span class="badge {{ status_tone($head->status) }}">{{ label($head->status) }}</span>@else Not yet registered @endif</dd>
+                    @if($sysadmin && $sysadmin->role === 'SCHOOL_ADMIN')<dt>System administrator</dt><dd>{{ $sysadmin->name }} <span class="badge {{ status_tone($sysadmin->status) }}">{{ label($sysadmin->status) }}</span></dd>@endif
                 </dl>
             </div>
         </div>

@@ -18,6 +18,7 @@
     <div class="stat {{ pct_tone($totals['pass_rate'], 70, 50) }}"><div class="label">Pass rate</div><div class="value">{{ num($totals['pass_rate']) }}<small>%</small></div><div class="foot">Scores of 40 percent and above</div></div>
 </div>
 
+@include('supervisor._exams', ['exams' => $exams])
 <div class="panel">
     <div class="panel-head"><h2>Schools</h2><span class="hint">Select a school to see classes, teachers and inspection history</span></div>
     <div class="table-wrap">

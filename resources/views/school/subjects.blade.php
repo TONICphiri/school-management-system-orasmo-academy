@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Subjects')
 @section('content')
-@php $admin = auth()->user()->role === 'FACILITY_ADMIN'; @endphp
+@php $admin = auth()->user()->isSchoolAdmin(); @endphp
 <div class="page-head"><div><h1>Subjects</h1><div class="sub">Final marks combine continuous assessment and the end of term examination. The national default is 40% and 60%.</div></div></div>
 <div class="grid {{ $admin ? 'grid-main' : '' }}">
     <div class="stack">

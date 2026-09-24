@@ -51,15 +51,14 @@ class OnboardingController extends Controller
             Notifier::send($user, 'ACCOUNT', 'Your account is active',
                 'You can now use the MoEST School Management System as '.$user->roleLabel().'.', route('dashboard'));
 
-            if ($user->role === 'FACILITY_ADMIN' && $user->school) {
-                if ($user->school->status === 'PENDING_ACTIVATION') {
-                    $user->school->update(['status' => 'ACTIVE']);
-                }
+            if ($user->isSchoolAdmin() && $user->school && $user->school->status === 'PENDING_ACTIVATION') {
+                // The first school system administrator created by the Ministry brings the school online.
+                $user->school->update(['status' => 'ACTIVE']);
                 Notifier::send(Notifier::systemAdmins(), 'ACCOUNT', 'School activated',
-                    $user->name.' activated the head teacher account for '.$user->school->name.'.',
+                    $user->name.' activated the '.strtolower($user->roleLabel()).' account for '.$user->school->name.'.',
                     route('admin.schools.show', $user->school));
             } elseif ($user->school_id) {
-                Notifier::send(Notifier::schoolRoles($user->school_id, ['FACILITY_ADMIN']), 'ACCOUNT', 'New user activated',
+                Notifier::send(Notifier::schoolRoles($user->school_id, \App\Models\User::ADMIN_ROLES), 'ACCOUNT', 'New user activated',
                     $user->name.' ('.$user->roleLabel().') has activated their account.', route('school.staff.index'));
             }
         }

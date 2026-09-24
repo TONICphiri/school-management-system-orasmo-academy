@@ -1,6 +1,9 @@
 @if (session('status'))
     <div class="alert success" role="status">{{ session('status') }}</div>
 @endif
+@if (session('warning'))
+    <div class="alert warn" role="status">{{ session('warning') }}</div>
+@endif
 @if (session('dev_code'))
     <div class="alert warn">
         <strong>Test mode code:</strong> <span class="dev-code">{{ session('dev_code') }}</span>

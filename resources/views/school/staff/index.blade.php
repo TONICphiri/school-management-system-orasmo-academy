@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Staff')
 @section('content')
-@php $admin = auth()->user()->role === 'FACILITY_ADMIN'; @endphp
+@php $admin = auth()->user()->isSchoolAdmin(); @endphp
 <div class="page-head">
     <div><h1>Staff</h1><div class="sub">{{ $staff->count() }} teaching staff. Primary class teachers need at least a T2 certificate, secondary teachers a Diploma or Bachelor.</div></div>
     @if($admin)<div class="actions"><a class="btn" href="{{ route('school.staff.create') }}">{{ icon('plus', 16) }} Add staff member</a></div>@endif
@@ -27,11 +27,11 @@
                 <td><span class="badge {{ status_tone($u->status) }}">{{ label($u->status) }}</span></td>
                 @if($admin)
                 <td class="right nowrap">
-                    <a class="btn ghost small" href="{{ route('school.staff.edit', $u) }}">{{ icon('edit', 14) }} Edit</a>
+                    @if($u->role !== 'FACILITY_ADMIN' || $u->id === auth()->id())<a class="btn ghost small" href="{{ route('school.staff.edit', $u) }}">{{ icon('edit', 14) }} Edit</a>@endif
                     @if($u->status === 'PENDING_ACTIVATION')
                         <form method="POST" action="{{ route('school.staff.resend', $u) }}" style="display:inline">@csrf<button class="btn ghost small" type="submit">Resend code</button></form>
                     @endif
-                    @if($u->id !== auth()->id())
+                    @if($u->id !== auth()->id() && $u->role !== 'FACILITY_ADMIN')
                         <form method="POST" action="{{ route('school.staff.status', $u) }}" style="display:inline" data-confirm="{{ $u->status === 'SUSPENDED' ? 'Restore' : 'Suspend' }} the account of {{ $u->name }}?">@csrf<button class="btn ghost small" type="submit">{{ $u->status === 'SUSPENDED' ? 'Restore' : 'Suspend' }}</button></form>
                     @endif
                 </td>

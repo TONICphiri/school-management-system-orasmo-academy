@@ -82,17 +82,18 @@ class SchoolController extends Controller
             'terms.*.break_name' => 'nullable|string|max:60',
             'terms.*.break_start' => 'nullable|date',
             'terms.*.break_end' => 'nullable|date',
+            'admin_role' => 'required|in:FACILITY_ADMIN,SCHOOL_ADMIN',
             'admin_name' => 'required|string|max:120',
             'admin_email' => 'nullable|required_if:admin_channel,EMAIL|email|max:120|unique:users,email',
             'admin_phone' => 'nullable|required_if:admin_channel,SMS|string|max:30|unique:users,phone',
             'admin_national_id' => 'required|string|max:30',
             'admin_gender' => 'required|in:Male,Female',
-            'admin_qualification' => ['required', Rule::in(array_keys(TeacherProfile::QUALIFICATIONS))],
+            'admin_qualification' => ['nullable', 'required_if:admin_role,FACILITY_ADMIN', Rule::in(array_keys(TeacherProfile::QUALIFICATIONS))],
             'admin_channel' => 'required|in:SMS,EMAIL',
             'admin_credential' => 'required|in:OTP,TEMP_PASSWORD',
         ], [], [
-            'admin_name' => 'head teacher name', 'admin_email' => 'head teacher email',
-            'admin_phone' => 'head teacher phone', 'admin_national_id' => 'national ID',
+            'admin_name' => 'administrator name', 'admin_email' => 'administrator email',
+            'admin_phone' => 'administrator phone', 'admin_national_id' => 'national ID',
         ]);
 
         $district = District::find($data['district_id']);
@@ -121,14 +122,16 @@ class SchoolController extends Controller
                 'phone' => $data['admin_phone'] ?: null,
                 'national_id' => $data['admin_national_id'],
                 'gender' => $data['admin_gender'],
-                'role' => 'FACILITY_ADMIN',
+                'role' => $data['admin_role'],
                 'status' => 'PENDING_ACTIVATION',
                 'preferred_channel' => $data['admin_channel'],
             ]);
-            TeacherProfile::create(['user_id' => $admin->id, 'qualification' => $data['admin_qualification']]);
+            if ($data['admin_role'] === 'FACILITY_ADMIN') {
+                TeacherProfile::create(['user_id' => $admin->id, 'qualification' => $data['admin_qualification']]);
+            }
 
             Audit::log('school.created', 'Created school '.$school->name.' ('.$school->code.')', $school, $school->id);
-            Audit::log('user.invited', 'Invited '.$admin->name.' as Head Teacher of '.$school->name, $admin, $school->id);
+            Audit::log('user.invited', 'Invited '.$admin->name.' as '.$admin->roleLabel().' of '.$school->name, $admin, $school->id);
 
             $code = OtpService::issue($admin, 'ACTIVATION', $data['admin_credential'], $data['admin_channel']);
 
@@ -140,7 +143,7 @@ class SchoolController extends Controller
         }
 
         return redirect()->route('admin.schools.show', $school)
-            ->with('status', 'School created. An activation '.($data['admin_credential'] === 'OTP' ? 'code' : 'password').' has been sent to the head teacher.');
+            ->with('status', 'School created. An activation '.($data['admin_credential'] === 'OTP' ? 'code' : 'password').' has been sent to the '.strtolower(User::ROLES[$data['admin_role']]).'.');
     }
 
     public function show(School $school)
@@ -151,6 +154,7 @@ class SchoolController extends Controller
             'school' => $school,
             'stats' => Stats::school($school),
             'head' => $school->headTeacher,
+            'sysadmin' => $school->systemAdmin,
             'staff' => User::where('school_id', $school->id)->whereNotIn('role', ['STUDENT', 'PARENT'])->orderBy('role')->get(),
             'years' => \App\Models\AcademicYear::withoutGlobalScopes()->with(['terms' => fn ($q) => $q->withoutGlobalScopes()])->where('school_id', $school->id)->get(),
             'logs' => AuditLog::with('user')->where('school_id', $school->id)->latest('created_at')->take(10)->get(),
@@ -192,7 +196,7 @@ class SchoolController extends Controller
         $school->update(['status' => $data['status']]);
         Audit::log('school.status', $school->name.' changed from '.$old.' to '.$school->statusLabel().($data['reason'] ? '. Reason: '.$data['reason'] : ''), $school, $school->id);
 
-        Notifier::send(Notifier::schoolRoles($school->id, ['FACILITY_ADMIN']), 'ACCOUNT', 'School status changed',
+        Notifier::send(Notifier::schoolRoles($school->id, \App\Models\User::ADMIN_ROLES), 'ACCOUNT', 'School status changed',
             $school->name.' is now '.$school->statusLabel().'.'.($data['reason'] ? ' Reason: '.$data['reason'] : ''), null, 'HIGH', ['APP', 'PREFERRED']);
 
         return back()->with('status', 'School status updated to '.$school->statusLabel().'.');
@@ -200,8 +204,8 @@ class SchoolController extends Controller
 
     public function resend(Request $request, School $school)
     {
-        $head = $school->headTeacher;
-        abort_unless($head && $head->status === 'PENDING_ACTIVATION', 422, 'The head teacher account is already active.');
+        $head = $school->systemAdmin;
+        abort_unless($head && $head->status === 'PENDING_ACTIVATION', 422, 'The school administrator account is already active.');
         $code = OtpService::issue($head, 'ACTIVATION', $request->input('kind', 'OTP'));
         Audit::log('user.code_resent', 'Sent a new activation code to '.$head->name, $head, $school->id);
         if (config('services.sms.show_codes')) {

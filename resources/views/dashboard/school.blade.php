@@ -13,8 +13,8 @@
         <div class="sub">{{ $school->typeLabel() }} &middot; {{ $school->categoryLabel() }} &middot; {{ $school->district->name }} &middot; {{ $term ? $term->label().', ends '.$term->ends_on->format('j M Y') : 'No current term set' }}</div>
     </div>
     <div class="actions">
-        <a class="btn secondary" href="{{ route('school.marks.index') }}">{{ icon('edit', 16) }} Enter marks</a>
-        @if ($me->role === 'FACILITY_ADMIN')
+        @if ($me->isTeachingStaff())<a class="btn secondary" href="{{ route('school.marks.index') }}">{{ icon('edit', 16) }} Enter marks</a>@endif
+        @if ($me->isSchoolAdmin())
             <a class="btn" href="{{ route('school.staff.create') }}">{{ icon('plus', 16) }} Add staff</a>
         @endif
     </div>
@@ -135,7 +135,7 @@
 
         @isset($recent)
         <div class="panel">
-            <div class="panel-head"><h2>Recent activity</h2>@if($me->role === 'FACILITY_ADMIN')<a class="small" href="{{ route('school.audit') }}">Audit log</a>@endif</div>
+            <div class="panel-head"><h2>Recent activity</h2>@if($me->isSchoolAdmin())<a class="small" href="{{ route('school.audit') }}">Audit log</a>@endif</div>
             @if ($feedbackOpen)
                 <div class="alert warn" style="margin:.75rem">{{ $feedbackOpen }} open {{ Str::plural('concern', $feedbackOpen) }} from the SMC, PTA or Board. <a href="{{ route('school.feedback.index') }}">Respond</a></div>
             @endif

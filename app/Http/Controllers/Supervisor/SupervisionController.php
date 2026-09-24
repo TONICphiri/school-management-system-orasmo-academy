@@ -52,6 +52,7 @@ class SupervisionController extends Controller
             'school' => $school->load(['district', 'division', 'zone']),
             'stats' => $stats,
             'classRows' => $classRows,
+            'exams' => Stats::examPerformance($school),
             'teachers' => User::with('teacherProfile')->where('school_id', $school->id)->whereIn('role', User::TEACHING_ROLES)->orderBy('name')->get(),
             'qualifications' => TeacherProfile::QUALIFICATIONS,
             'inspections' => InspectionReport::with('supervisor')->where('school_id', $school->id)->latest('visit_date')->get(),

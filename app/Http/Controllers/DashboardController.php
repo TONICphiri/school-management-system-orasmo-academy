@@ -52,9 +52,26 @@ class DashboardController extends Controller
     {
         $schools = Stats::jurisdiction($user)->orderBy('name')->get();
         $rows = $schools->map(fn ($s) => ['school' => $s, 'stats' => Stats::school($s)]);
+        // Jurisdiction totals for PSLCE, JCE and MSCE
+        $exams = [];
+        foreach ($schools as $s) {
+            foreach (Stats::examPerformance($s) as $key => $e) {
+                $exams[$key] ??= ['exam' => $key, 'candidates' => 0, 'with_marks' => 0, 'eligible' => 0, 'girls' => 0, 'girls_eligible' => 0];
+                foreach (['candidates', 'with_marks', 'eligible', 'girls', 'girls_eligible'] as $f) {
+                    $exams[$key][$f] += $e[$f];
+                }
+            }
+        }
+        foreach ($exams as &$e) {
+            $e['rate'] = $e['with_marks'] ? round($e['eligible'] / $e['with_marks'] * 100, 1) : null;
+        }
+        unset($e);
+        $order = ['PSLCE' => 1, 'JCE' => 2, 'MSCE' => 3];
+        uksort($exams, fn ($a, $b) => ($order[$a] ?? 9) <=> ($order[$b] ?? 9));
 
         return view('dashboard.supervisor', [
             'rows' => $rows,
+            'exams' => $exams,
             'totals' => [
                 'enrolment' => $rows->sum(fn ($r) => $r['stats']['enrolment']),
                 'teachers' => $rows->sum(fn ($r) => $r['stats']['teachers']),
@@ -148,6 +165,8 @@ class DashboardController extends Controller
             'membership' => $user->governance,
             'feedback' => FeedbackItem::where('user_id', $user->id)->latest()->take(5)->get(),
             'inspections' => InspectionReport::where('school_id', $school->id)->latest('visit_date')->take(3)->get(),
+            'exams' => Stats::examPerformance($school),
+            'finance' => \App\Models\FinanceEntry::summary($school->id, $school->currentTerm()?->id),
         ]);
     }
 }

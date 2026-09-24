@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Academic calendar')
 @section('content')
-@php $admin = auth()->user()->role === 'FACILITY_ADMIN'; @endphp
+@php $admin = auth()->user()->isSchoolAdmin(); @endphp
 <div class="page-head"><div><h1>Academic calendar</h1><div class="sub">Three terms per year with mid-term breaks. Changes are sent to staff and parents.</div></div></div>
 <div class="grid grid-main">
 <div class="stack">

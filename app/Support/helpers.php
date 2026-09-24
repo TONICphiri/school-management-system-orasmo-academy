@@ -24,6 +24,14 @@ if (! function_exists('current_term')) {
     }
 }
 
+if (! function_exists('mwk')) {
+    /** Format an amount in Malawi Kwacha, for example MK 1,250,000. */
+    function mwk($value): string
+    {
+        return 'MK '.number_format((float) $value, 0);
+    }
+}
+
 if (! function_exists('num')) {
     function num($value, int $decimals = 1, string $empty = 'n/a'): string
     {
@@ -96,6 +104,8 @@ if (! function_exists('icon')) {
                 'inbox' => '<path d="M3 13l3-8h12l3 8v7H3z"/><path d="M3 13h5l1 3h6l1-3h5"/>',
                 'award' => '<circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/>',
                 'upload' => '<path d="M12 20V9M7 14l5-5 5 5M4 4h16"/>',
+                'wallet' => '<path d="M3 7h18v13H3zM3 7l3-4h12l3 4M16 13h2"/>',
+                'id-card' => '<path d="M3 5h18v14H3zM7 10h4M7 14h6M15 9h3v4h-3z"/>',
             ];
         }
 
