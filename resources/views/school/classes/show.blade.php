@@ -39,7 +39,7 @@
                     <tr>
                         <td><span class="strong">{{ $cs->subject->name }}</span> @if(! $cs->subject->is_core)<span class="badge neutral">Elective</span>@endif<div class="small muted">{{ $cs->subject->department?->name }}</div></td>
                         <td>@if($canManage)<select name="lessons[{{ $cs->id }}][teacher_id]"><option value="">Not assigned</option>@foreach ($teachers as $t)<option value="{{ $t->id }}" @selected($cs->teacher_id === $t->id)>{{ $t->name }}</option>@endforeach</select>@else{{ $cs->teacher?->name ?? 'Not assigned' }}@endif</td>
-                        <td class="num">@if($canManage)<input type="number" name="lessons[{{ $cs->id }}][periods_per_week]" value="{{ $cs->periods_per_week }}" min="0" max="12" style="width:70px">@else{{ $cs->periods_per_week }}@endif</td>
+                        <td class="num">@if($canManage)<input class="w-[70px]" type="number" name="lessons[{{ $cs->id }}][periods_per_week]" value="{{ $cs->periods_per_week }}" min="0" max="12">@else{{ $cs->periods_per_week }}@endif</td>
                         @if($secondary)<td class="num">{{ $cs->subject->is_core ? $students->count() : ($electiveCounts[$cs->id] ?? 0) }}</td>@endif
                     </tr>
                 @endforeach

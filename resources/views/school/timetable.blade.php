@@ -9,12 +9,12 @@
     @endif
 </div>
 @if (count($conflicts))
-    <div class="alert error"><strong>{{ count($conflicts) }} clashes found</strong><ul style="margin:.4rem 0 0 1rem">@foreach (array_slice($conflicts, 0, 8) as $c)<li>{{ $c }}</li>@endforeach</ul></div>
+    <div class="alert error"><strong>{{ count($conflicts) }} clashes found</strong><ul class="m-[.4rem_0_0_1rem]">@foreach (array_slice($conflicts, 0, 8) as $c)<li>{{ $c }}</li>@endforeach</ul></div>
 @elseif ($slotCount)
     <div class="alert success">No clashes. Every teacher and class has at most one lesson per period.</div>
 @endif
 @if (session('unplaced'))
-    <div class="alert warn"><strong>Lessons that could not be placed</strong><ul style="margin:.4rem 0 0 1rem">@foreach (session('unplaced') as $u)<li>{{ $u }}</li>@endforeach</ul></div>
+    <div class="alert warn"><strong>Lessons that could not be placed</strong><ul class="m-[.4rem_0_0_1rem]">@foreach (session('unplaced') as $u)<li>{{ $u }}</li>@endforeach</ul></div>
 @endif
 <div class="tabs">
     <a href="{{ route('school.timetable.index', ['view' => 'teacher']) }}" class="{{ $view === 'teacher' ? 'active' : '' }}">By teacher</a>
@@ -30,13 +30,13 @@
         @endif
         <div class="legend"><span><span class="grade g-top">&nbsp;</span> Lesson</span><span><span class="grade g-fail">&nbsp;</span> Clash</span></div>
     </form>
-    <div class="table-wrap" style="padding:0 1rem 1rem">
+    <div class="table-wrap p-[0_1rem_1rem]">
         <table class="tt">
-            <thead><tr><th style="width:90px">Period</th>@foreach ($days as $d)<th>{{ $d }}</th>@endforeach</tr></thead>
+            <thead><tr><th class="w-[90px]">Period</th>@foreach ($days as $d)<th>{{ $d }}</th>@endforeach</tr></thead>
             <tbody>
             @foreach ($times as $p => $start)
-                @if ($p === 5)<tr><td colspan="6" class="small muted" style="text-align:center;background:#f7f8f5">Break 10:10 to 10:30</td></tr>@endif
-                @if ($p === 8)<tr><td colspan="6" class="small muted" style="text-align:center;background:#f7f8f5">Lunch 12:30 to 13:30</td></tr>@endif
+                @if ($p === 5)<tr><td colspan="6" class="small muted text-center bg-[#f7f8f5]">Break 10:10 to 10:30</td></tr>@endif
+                @if ($p === 8)<tr><td colspan="6" class="small muted text-center bg-[#f7f8f5]">Lunch 12:30 to 13:30</td></tr>@endif
                 <tr>
                     <th><div>Period {{ $p }}</div><div class="small muted">{{ $start }}</div></th>
                     @foreach ($days as $d => $dn)

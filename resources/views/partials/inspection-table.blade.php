@@ -14,7 +14,7 @@
                     @if (auth()->user()->isSupervisor())
                         <a class="btn secondary small" href="{{ route('supervisor.inspections.show', $r) }}">Open</a>
                     @else
-                        <details><summary class="btn secondary small">Read</summary><div class="small" style="text-align:left;max-width:520px;white-space:pre-line;padding:.5rem 0"><strong>Findings</strong>
+                        <details><summary class="btn secondary small">Read</summary><div class="small text-left max-w-[520px] whitespace-pre-line p-[.5rem_0]"><strong>Findings</strong>
 {{ $r->findings }}
 
 <strong>Recommendations</strong>

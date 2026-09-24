@@ -16,10 +16,10 @@
 @endphp
 <div class="page-head">
     <div><h1>{{ $class->name() }} results</h1><div class="sub">{{ $term->label() }} &middot; {{ $results['class_size'] }} learners &middot; class average {{ num($results['class_average']) }}%</div></div>
-    <span class="badge {{ status_tone($status->stage) }}" style="font-size:.85rem;padding:.35rem .7rem">{{ $stages[$status->stage] }}</span>
+    <span class="badge {{ status_tone($status->stage) }} text-[.85rem] p-[.35rem_.7rem]">{{ $stages[$status->stage] }}</span>
 </div>
 
-<div class="pipeline" style="grid-template-columns:repeat({{ count($steps) }}, 1fr);margin-bottom:1.25rem">
+<div class="pipeline mb-[1.25rem]" style="grid-template-columns:repeat({{ count($steps) }}, 1fr)">
     @foreach ($steps as $k => $v)
         @php $i = array_search($k, $order); @endphp
         <div class="step {{ $i < $at || $status->stage === 'RELEASED' ? 'done' : ($i === $at ? 'current' : '') }}">
@@ -63,11 +63,11 @@
                 <td class="right nowrap">
                     @if ($status->stage === 'OPEN')
                         @if ($isSecondary && $canVal && $st->status === 'SUBMITTED')
-                            <form method="POST" action="{{ route('school.results.validate', $st) }}" style="display:inline">@csrf<button class="btn small" type="submit">Validate</button></form>
+                            <form class="inline" method="POST" action="{{ route('school.results.validate', $st) }}">@csrf<button class="btn small" type="submit">Validate</button></form>
                         @endif
                         @if (($canVal || $isHead || (! $isSecondary && $canReview)) && in_array($st->status, ['SUBMITTED', 'VALIDATED']))
-                            <details style="display:inline-block"><summary class="btn ghost small">Return</summary>
-                                <form method="POST" action="{{ route('school.results.return', $st) }}" class="inline-form" style="margin-top:.4rem">@csrf<input type="text" name="remark" placeholder="Reason for return" required><button class="btn danger small" type="submit">Return</button></form>
+                            <details class="inline-block"><summary class="btn ghost small">Return</summary>
+                                <form method="POST" action="{{ route('school.results.return', $st) }}" class="inline-form mt-[.4rem]">@csrf<input type="text" name="remark" placeholder="Reason for return" required><button class="btn danger small" type="submit">Return</button></form>
                             </details>
                         @endif
                     @endif
@@ -102,7 +102,7 @@
                         <td class="num">{{ $l['best_six'] ?? '' }}</td>
                         <td>@if($l['exam_eligible'] !== null)<span class="badge {{ $l['exam_eligible'] ? 'ok' : 'warn' }}" title="{{ $l['exam_note'] }}">{{ $l['exam_eligible'] ? 'On track' : 'At risk' }}</span>@else<span class="small muted">{{ $l['credits'] }} credits</span>@endif</td>
                     @endif
-                    <td style="min-width:220px"><input type="text" name="comment[{{ $sid }}]" value="{{ $isHead && $class->class_teacher_id !== $user->id ? $c?->head_comment : $c?->class_teacher_comment }}" @disabled($status->stage === 'RELEASED')></td>
+                    <td class="min-w-[220px]"><input type="text" name="comment[{{ $sid }}]" value="{{ $isHead && $class->class_teacher_id !== $user->id ? $c?->head_comment : $c?->class_teacher_comment }}" @disabled($status->stage === 'RELEASED')></td>
                     <td><a class="btn ghost small" href="{{ route('school.reports.card', $l['student']) }}">{{ icon('printer', 14) }}</a></td>
                 </tr>
             @endforeach

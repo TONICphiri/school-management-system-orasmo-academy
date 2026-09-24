@@ -9,7 +9,7 @@
                 <td class="num">{{ $e['candidates'] }}</td>
                 <td class="num">{{ $e['with_marks'] }}</td>
                 <td class="num">{{ $e['eligible'] }}</td>
-                <td style="min-width:140px"><div class="progress {{ pct_tone($e['rate'], 60, 40) }}"><span style="width:{{ (int) $e['rate'] }}%"></span></div><span class="small">{{ num($e['rate']) }}{{ $e['rate'] !== null ? '%' : '' }}</span></td>
+                <td class="min-w-[140px]"><div class="progress {{ pct_tone($e['rate'], 60, 40) }}"><span style="width:{{ (int) $e['rate'] }}%"></span></div><span class="small">{{ num($e['rate']) }}{{ $e['rate'] !== null ? '%' : '' }}</span></td>
                 <td class="num">{{ $e['girls_eligible'] }} of {{ $e['girls'] }}</td>
             </tr>
         @empty

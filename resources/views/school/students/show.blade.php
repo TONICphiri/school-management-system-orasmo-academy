@@ -4,7 +4,7 @@
 @section('content')
 @php $leader = $canEdit; $present = ($attendance['PRESENT'] ?? 0) + ($attendance['LATE'] ?? 0); $days = $attendance->sum(); @endphp
 <div class="page-head">
-    <div><h1>{{ $student->fullName() }} <span class="badge {{ status_tone($student->status) }}" style="vertical-align:middle">{{ label($student->status) }}</span></h1>
+    <div><h1>{{ $student->fullName() }} <span class="badge {{ status_tone($student->status) }} align-middle">{{ label($student->status) }}</span></h1>
     <div class="sub">Learner ID <strong>{{ $student->learner_uid }}</strong> &middot; {{ $student->admission_number }} &middot; {{ $student->schoolClass?->name() }} &middot; {{ $student->gender }}{{ $student->date_of_birth ? ', '.$student->date_of_birth->age.' years' : '' }}</div></div>
     <div class="actions">
         <a class="btn secondary" href="{{ route('school.students.card', $student) }}">{{ icon('printer', 16) }} Learner card</a>
@@ -16,7 +16,7 @@
     <div class="stat {{ pct_tone($days ? $present / $days * 100 : null, 90, 80) }}"><div class="label">Attendance {{ $term?->label() }}</div><div class="value">{{ $days ? round($present / $days * 100) : 'n/a' }}<small>{{ $days ? '%' : '' }}</small></div><div class="foot">{{ $present }} of {{ $days }} days</div></div>
     <div class="stat red"><div class="label">Absent</div><div class="value">{{ $attendance['ABSENT'] ?? 0 }}</div><div class="foot">{{ $attendance['EXCUSED'] ?? 0 }} excused</div></div>
     <div class="stat amber"><div class="label">Late</div><div class="value">{{ $attendance['LATE'] ?? 0 }}</div></div>
-    @if($student->maneb_exam_number)<div class="stat blue"><div class="label">MANEB exam number</div><div class="value" style="font-size:1.2rem">{{ $student->maneb_exam_number }}</div></div>@endif
+    @if($student->maneb_exam_number)<div class="stat blue"><div class="label">MANEB exam number</div><div class="value text-[1.2rem]">{{ $student->maneb_exam_number }}</div></div>@endif
 </div>
 <div class="grid grid-2">
     <div class="panel">
@@ -71,8 +71,8 @@
         @if($canEdit)
         <form method="POST" action="{{ route('school.students.history', $student) }}" class="panel-foot inline-form">@csrf
             <input type="text" name="school_name" placeholder="Previous school" required>
-            <input type="text" name="last_class" placeholder="Last class" style="max-width:130px">
-            <input type="number" name="year_left" placeholder="Year" min="1990" max="{{ now()->year }}" style="max-width:100px">
+            <input class="max-w-[130px]" type="text" name="last_class" placeholder="Last class">
+            <input class="max-w-[100px]" type="number" name="year_left" placeholder="Year" min="1990" max="{{ now()->year }}">
             <input type="text" name="reason" placeholder="Reason">
             <button class="btn secondary" type="submit">Add</button>
         </form>

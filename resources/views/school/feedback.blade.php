@@ -12,18 +12,18 @@
                 <span class="badge {{ status_tone($f->status) }}">{{ label($f->status) }}</span>
             </div>
             <div class="panel-body">
-                <p style="white-space:pre-line;margin-top:0">{{ $f->body }}</p>
+                <p class="whitespace-pre-line mt-0">{{ $f->body }}</p>
                 @if ($f->response)
-                    <div class="alert info" style="margin-bottom:0"><strong>Response from {{ $f->responder?->name ?? 'the school' }}</strong> <span class="small muted">{{ $f->responded_at?->format('j M Y') }}</span><div style="white-space:pre-line">{{ $f->response }}</div></div>
+                    <div class="alert info mb-0"><strong>Response from {{ $f->responder?->name ?? 'the school' }}</strong> <span class="small muted">{{ $f->responded_at?->format('j M Y') }}</span><div class="whitespace-pre-line">{{ $f->response }}</div></div>
                 @endif
                 @if ($f->escalated_at)
-                    <p class="small muted" style="margin-bottom:0">Escalated to {{ $f->escalatedTo?->name ?? 'the education office' }} on {{ $f->escalated_at->format('j M Y') }}.</p>
+                    <p class="small muted mb-0">Escalated to {{ $f->escalatedTo?->name ?? 'the education office' }} on {{ $f->escalated_at->format('j M Y') }}.</p>
                 @endif
             </div>
             @if ($user->role === 'FACILITY_ADMIN' && ! in_array($f->status, ['RESOLVED', 'CLOSED', 'ESCALATED']))
-                <form method="POST" action="{{ route('school.feedback.respond', $f) }}" class="panel-foot" style="display:block">@csrf
-                    <div class="field" style="margin-bottom:.6rem"><label>Your response</label><textarea name="response" rows="3" required></textarea></div>
-                    <div class="inline-form" style="justify-content:space-between"><label class="check"><input type="checkbox" name="resolve" value="1"> Mark as resolved</label><button class="btn" type="submit">Send response</button></div>
+                <form method="POST" action="{{ route('school.feedback.respond', $f) }}" class="panel-foot block">@csrf
+                    <div class="field mb-[.6rem]"><label>Your response</label><textarea name="response" rows="3" required></textarea></div>
+                    <div class="inline-form justify-between"><label class="check"><input type="checkbox" name="resolve" value="1"> Mark as resolved</label><button class="btn" type="submit">Send response</button></div>
                 </form>
             @elseif ($gov && $f->user_id === $user->id && ! in_array($f->status, ['ESCALATED', 'RESOLVED', 'CLOSED']))
                 <div class="panel-foot"><span class="small muted">Not satisfied with the response?</span>

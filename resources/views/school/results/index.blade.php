@@ -3,7 +3,7 @@
 @section('content')
 <div class="page-head"><div><h1>Results approval</h1><div class="sub">{{ $term?->label() ?? 'No current term' }}. Primary: subject teacher, class teacher, head teacher. Secondary: subject teacher, head of department, form master, Deputy Head Academic, head teacher.</div></div></div>
 @php $counts = collect($rows)->countBy('stage'); @endphp
-<div class="pipeline" style="grid-template-columns:repeat({{ count($stages) }}, 1fr);margin-bottom:1.25rem">
+<div class="pipeline mb-[1.25rem]" style="grid-template-columns:repeat({{ count($stages) }}, 1fr)">
     @foreach ($stages as $k => $v)
         <div class="step {{ ($counts[$k] ?? 0) ? 'current' : '' }}"><div class="n">{{ $counts[$k] ?? 0 }}</div><div class="t">{{ $v }}</div></div>
     @endforeach
@@ -19,7 +19,7 @@
             <tr>
                 <td class="strong">{{ $c->name() }}</td>
                 <td>{{ $c->classTeacher?->name ?? 'Not assigned' }}</td>
-                <td style="min-width:140px"><div class="progress {{ $pct < 100 ? 'amber' : '' }}"><span style="width:{{ $pct }}%"></span></div><div class="small muted">{{ $r['submitted'] }} of {{ $r['total'] }}</div></td>
+                <td class="min-w-[140px]"><div class="progress {{ $pct < 100 ? 'amber' : '' }}"><span style="width:{{ $pct }}%"></span></div><div class="small muted">{{ $r['submitted'] }} of {{ $r['total'] }}</div></td>
                 <td class="num">{{ $c->isSecondary() ? $r['validated'].' of '.$r['total'] : 'Not required' }}</td>
                 <td><span class="badge {{ status_tone($r['stage']) }}">{{ $stages[$r['stage']] }}</span></td>
                 <td class="right">@if($canOpen)<a class="btn secondary small" href="{{ route('school.results.show', $c) }}">Open</a>@endif</td>

@@ -84,6 +84,24 @@ Each school is a tenant, and its data is kept separate from every other school. 
 
 The default database settings in `.env` are `DB_USERNAME=root` with an empty password, which matches a fresh XAMPP install.
 
+## Styling with Tailwind CSS and Vite
+
+The interface is built with [Tailwind CSS 4](https://tailwindcss.com) and compiled by [Vite](https://vite.dev) through the Laravel Vite plugin.
+
+- `resources/css/app.css` holds the design tokens (Ministry green, status colours, fonts and breakpoints) in the `@theme` block, the base styles, and the shared components (panels, tables, badges, buttons, forms) written with `@apply`.
+- The layouts in `resources/views/layouts` use Tailwind utility classes directly.
+- `resources/js/app.js` handles the notification bell, the user menu, the mobile sidebar, confirmation prompts and the keyboard friendly mark entry.
+- Rounded corners are switched off in the theme, so every section keeps 90 degree corners.
+
+The compiled files are already in `public/build`, so the system runs on XAMPP without Node.js. If you change a view or the stylesheet, install [Node.js 20 or newer](https://nodejs.org) and run:
+
+```
+npm install
+npm run build
+```
+
+While you work, `npm run dev` rebuilds the styles every time you save a file. Stop it and run `npm run build` again before copying the project to another computer.
+
 ## Demo accounts
 
 Every demo account uses the password `Malawi@2026`.

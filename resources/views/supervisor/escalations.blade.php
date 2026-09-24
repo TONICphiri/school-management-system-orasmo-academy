@@ -9,13 +9,13 @@
             <span class="badge {{ status_tone($f->status) }}">{{ label($f->status) }}</span>
         </div>
         <div class="panel-body">
-            <p style="white-space:pre-line;margin-top:0">{{ $f->body }}</p>
-            @if($f->response)<div class="alert info" style="margin-bottom:0"><strong>Responses</strong><div style="white-space:pre-line">{{ $f->response }}</div></div>@endif
+            <p class="whitespace-pre-line mt-0">{{ $f->body }}</p>
+            @if($f->response)<div class="alert info mb-0"><strong>Responses</strong><div class="whitespace-pre-line">{{ $f->response }}</div></div>@endif
         </div>
         @if ($f->status === 'ESCALATED')
-            <form method="POST" action="{{ route('supervisor.escalations.close', $f->id) }}" class="panel-foot" style="display:block">@csrf
-                <div class="field" style="margin-bottom:.6rem"><label>Decision or action taken</label><textarea name="response" rows="3" required></textarea></div>
-                <div class="inline-form" style="justify-content:flex-end"><button class="btn" type="submit">Close with response</button></div>
+            <form method="POST" action="{{ route('supervisor.escalations.close', $f->id) }}" class="panel-foot block">@csrf
+                <div class="field mb-[.6rem]"><label>Decision or action taken</label><textarea name="response" rows="3" required></textarea></div>
+                <div class="inline-form justify-end"><button class="btn" type="submit">Close with response</button></div>
             </form>
         @endif
     </div>

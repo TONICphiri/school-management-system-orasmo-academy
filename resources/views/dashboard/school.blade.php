@@ -41,7 +41,7 @@
                         <div class="step {{ $key === 'RELEASED' && $n ? 'done' : '' }}"><div class="n">{{ $n }}</div><div class="t">{{ $name }}</div></div>
                     @endforeach
                 </div>
-                <p class="small muted" style="margin:.75rem 0 0">
+                <p class="small muted m-[.75rem_0_0]">
                     @if ($sec) Subject teacher submits, head of department validates, form master reviews, deputy head (academic) approves, head teacher releases.
                     @else Teacher submits, class teacher reviews, head teacher releases to parents. @endif
                 </p>
@@ -125,9 +125,9 @@
         <div class="panel">
             <div class="panel-head"><h2>My class</h2><span class="hint">{{ $myClass->isSecondary() ? 'Form master' : 'Class teacher' }}</span></div>
             <div class="panel-body">
-                <div style="font-size:1.3rem;font-weight:600">{{ $myClass->name() }}</div>
+                <div class="text-[1.3rem] font-semibold">{{ $myClass->name() }}</div>
                 <div class="muted small">{{ $myClass->students_count }} learners &middot; {{ $myClass->room }}</div>
-                <div class="actions" style="margin-top:.8rem">
+                <div class="actions mt-[.8rem]">
                     <a class="btn small" href="{{ route('school.attendance.edit', $myClass) }}">{{ icon('check', 14) }} Take attendance</a>
                     <a class="btn secondary small" href="{{ route('school.results.show', $myClass) }}">Class results</a>
                 </div>
@@ -139,7 +139,7 @@
         <div class="panel">
             <div class="panel-head"><h2>Recent activity</h2>@if($me->isSchoolAdmin())<a class="small" href="{{ route('school.audit') }}">Audit log</a>@endif</div>
             @if ($feedbackOpen)
-                <div class="alert warn" style="margin:.75rem">{{ $feedbackOpen }} open {{ Str::plural('concern', $feedbackOpen) }} from the SMC, PTA or Board. <a href="{{ route('school.feedback.index') }}">Respond</a></div>
+                <div class="alert warn m-[.75rem]">{{ $feedbackOpen }} open {{ Str::plural('concern', $feedbackOpen) }} from the SMC, PTA or Board. <a href="{{ route('school.feedback.index') }}">Respond</a></div>
             @endif
             <ul class="timeline">
                 @forelse ($recent as $log)

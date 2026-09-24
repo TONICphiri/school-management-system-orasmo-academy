@@ -9,7 +9,7 @@
 @endphp
 <div class="page-head">
     <div><h1>{{ $lesson->subject->name }}</h1><div class="sub">{{ $lesson->schoolClass->name() }} &middot; {{ $term->label() }} &middot; {{ $rosterCount }} learners &middot; CA {{ $lesson->subject->ca_weight }}%, exam {{ $lesson->subject->exam_weight }}%</div></div>
-    <span class="badge {{ status_tone($status->status) }}" style="font-size:.85rem;padding:.35rem .7rem">{{ label($status->status) }}</span>
+    <span class="badge {{ status_tone($status->status) }} text-[.85rem] p-[.35rem_.7rem]">{{ label($status->status) }}</span>
 </div>
 @if ($status->status === 'RETURNED' && $status->remark)
     <div class="alert warn"><strong>Returned for correction.</strong> {{ $status->remark }}</div>
@@ -28,7 +28,7 @@
                         <td>{{ $a->language }}</td>
                         <td>{{ $a->held_on?->format('j M') }}</td>
                         <td class="num">{{ $a->max_score }}</td>
-                        <td style="min-width:110px"><div class="progress {{ $a->marks_count < $rosterCount ? 'amber' : '' }}"><span style="width:{{ $rosterCount ? min(100, $a->marks_count / $rosterCount * 100) : 0 }}%"></span></div><div class="small muted">{{ $a->marks_count }} of {{ $rosterCount }}</div></td>
+                        <td class="min-w-[110px]"><div class="progress {{ $a->marks_count < $rosterCount ? 'amber' : '' }}"><span style="width:{{ $rosterCount ? min(100, $a->marks_count / $rosterCount * 100) : 0 }}%"></span></div><div class="small muted">{{ $a->marks_count }} of {{ $rosterCount }}</div></td>
                         <td class="right"><a class="btn secondary small" href="{{ route('school.marks.sheet', $a) }}">{{ $open ? 'Enter' : 'View' }}</a></td>
                     </tr>
                 @empty
@@ -70,7 +70,7 @@
             <div class="panel-head"><h2>Submit for review</h2></div>
             <form method="POST" action="{{ route('school.marks.submit', $lesson) }}" data-confirm="Submit these marks? They will be locked until reviewed.">@csrf
                 <div class="panel-body stack-sm">
-                    <p class="small" style="margin:0">{{ $phase === 'PRIMARY' ? 'Marks go to the class teacher for review, then to the head teacher for release.' : 'Marks go to the head of department for validation, then the form master, the Deputy Head Academic and the head teacher.' }}</p>
+                    <p class="small m-0">{{ $phase === 'PRIMARY' ? 'Marks go to the class teacher for review, then to the head teacher for release.' : 'Marks go to the head of department for validation, then the form master, the Deputy Head Academic and the head teacher.' }}</p>
                     <label class="check"><input type="checkbox" name="confirm_missing" value="1"> Submit even if some marks are blank</label>
                 </div>
                 <div class="panel-foot"><span></span><button class="btn" type="submit">{{ icon('send', 16) }} Submit marks</button></div>

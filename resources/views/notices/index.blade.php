@@ -18,12 +18,12 @@
 </div>
 <div class="panel">
     @forelse ($notices as $n)
-        <a href="{{ route('notices.open', $n) }}" class="notice-row {{ $n->read_at ? '' : 'unread' }}" style="padding:.9rem 1rem">
+        <a href="{{ route('notices.open', $n) }}" class="notice-row {{ $n->read_at ? '' : 'unread' }} p-[.9rem_1rem]">
             <span class="notice-icon {{ $n->category }} {{ $n->priority === 'HIGH' ? 'high' : '' }}">{{ icon(\App\Models\Notice::ICONS[$n->category] ?? 'bell', 16) }}</span>
-            <span style="flex:1">
+            <span class="flex-1">
                 <span class="notice-title">{{ $n->title }}</span>
-                @if ($n->priority === 'HIGH') <span class="badge bad" style="margin-left:.4rem">Important</span> @endif
-                <span class="notice-body" style="-webkit-line-clamp:unset">{{ $n->body }}</span>
+                @if ($n->priority === 'HIGH') <span class="badge bad ml-[.4rem]">Important</span> @endif
+                <span class="notice-body line-clamp-none">{{ $n->body }}</span>
             </span>
             <span class="notice-time nowrap">{{ $n->created_at->format('j M Y, H:i') }}</span>
         </a>

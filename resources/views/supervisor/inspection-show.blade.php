@@ -8,8 +8,8 @@
 </div>
 <div class="grid grid-main">
     <div class="stack">
-        <div class="panel"><div class="panel-head"><h2>Findings</h2></div><div class="panel-body" style="white-space:pre-line">{{ $report->findings }}</div></div>
-        <div class="panel"><div class="panel-head"><h2>Recommendations</h2></div><div class="panel-body" style="white-space:pre-line">{{ $report->recommendations }}</div></div>
+        <div class="panel"><div class="panel-head"><h2>Findings</h2></div><div class="panel-body whitespace-pre-line">{{ $report->findings }}</div></div>
+        <div class="panel"><div class="panel-head"><h2>Recommendations</h2></div><div class="panel-body whitespace-pre-line">{{ $report->recommendations }}</div></div>
     </div>
     <div class="panel">
         <div class="panel-head"><h2>Summary</h2></div>

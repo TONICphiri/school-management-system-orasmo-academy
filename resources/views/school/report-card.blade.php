@@ -20,7 +20,7 @@
             <p class="strong">Ministry of Education</p>
             <h2>{{ $school->name }}</h2>
             <p>{{ $school->postal_address }}{{ $school->phone ? ', Tel '.$school->phone : '' }}</p>
-            <p class="strong" style="margin-top:.4rem">End of Term Report, {{ $term->label() }}</p>
+            <p class="strong mt-[.4rem]">End of Term Report, {{ $term->label() }}</p>
         </div>
         <div>{{ icon('school', 48) }}</div>
     </div>
@@ -43,17 +43,17 @@
         </tbody>
     </table>
     @if($phase === 'SECONDARY' && isset($report['credits']))
-        <p class="small" style="margin-top:.6rem"><strong>{{ $report['credits'] }}</strong> credits, <strong>{{ $report['passes'] }}</strong> passes{{ $report['best_six'] ? ', best six aggregate '.$report['best_six'] : '' }}. {{ $report['exam_note'] }}</p>
+        <p class="small mt-[.6rem]"><strong>{{ $report['credits'] }}</strong> credits, <strong>{{ $report['passes'] }}</strong> passes{{ $report['best_six'] ? ', best six aggregate '.$report['best_six'] : '' }}. {{ $report['exam_note'] }}</p>
     @endif
     @else
         <p class="muted">No marks recorded for this term.</p>
     @endif
-    <p class="small muted" style="margin-top:.8rem">Grading key: {{ $bands->map(fn ($b) => $b->grade.' '.$b->label.' ('.(int) $b->min_score.' to '.(int) $b->max_score.')')->implode(', ') }}. Final mark is 40% continuous assessment and 60% examination.</p>
-    <table class="table bordered" style="margin-top:1rem">
-        <tr><th style="width:190px">Class teacher's remarks</th><td>{{ $comment?->class_teacher_comment }}</td></tr>
+    <p class="small muted mt-[.8rem]">Grading key: {{ $bands->map(fn ($b) => $b->grade.' '.$b->label.' ('.(int) $b->min_score.' to '.(int) $b->max_score.')')->implode(', ') }}. Final mark is 40% continuous assessment and 60% examination.</p>
+    <table class="table bordered mt-[1rem]">
+        <tr><th class="w-[190px]">Class teacher's remarks</th><td>{{ $comment?->class_teacher_comment }}</td></tr>
         <tr><th>Head teacher's remarks</th><td>{{ $comment?->head_comment }}</td></tr>
     </table>
-    <p class="small" style="margin-top:.8rem">@if($nextTerm)Next term opens on <strong>{{ $nextTerm->starts_on->format('l j F Y') }}</strong>.@endif</p>
+    <p class="small mt-[.8rem]">@if($nextTerm)Next term opens on <strong>{{ $nextTerm->starts_on->format('l j F Y') }}</strong>.@endif</p>
     <div class="sign">
         <div>{{ $class->classTeacher?->name }}<br><span class="small muted">Class teacher</span></div>
         <div>{{ $school->headTeacher?->name }}<br><span class="small muted">Head teacher, signature and school stamp</span></div>

@@ -29,10 +29,10 @@
                 <td class="right nowrap">
                     @if($u->role !== 'FACILITY_ADMIN' || $u->id === auth()->id())<a class="btn ghost small" href="{{ route('school.staff.edit', $u) }}">{{ icon('edit', 14) }} Edit</a>@endif
                     @if($u->status === 'PENDING_ACTIVATION')
-                        <form method="POST" action="{{ route('school.staff.resend', $u) }}" style="display:inline">@csrf<button class="btn ghost small" type="submit">Resend code</button></form>
+                        <form class="inline" method="POST" action="{{ route('school.staff.resend', $u) }}">@csrf<button class="btn ghost small" type="submit">Resend code</button></form>
                     @endif
                     @if($u->id !== auth()->id() && $u->role !== 'FACILITY_ADMIN')
-                        <form method="POST" action="{{ route('school.staff.status', $u) }}" style="display:inline" data-confirm="{{ $u->status === 'SUSPENDED' ? 'Restore' : 'Suspend' }} the account of {{ $u->name }}?">@csrf<button class="btn ghost small" type="submit">{{ $u->status === 'SUSPENDED' ? 'Restore' : 'Suspend' }}</button></form>
+                        <form class="inline" method="POST" action="{{ route('school.staff.status', $u) }}" data-confirm="{{ $u->status === 'SUSPENDED' ? 'Restore' : 'Suspend' }} the account of {{ $u->name }}?">@csrf<button class="btn ghost small" type="submit">{{ $u->status === 'SUSPENDED' ? 'Restore' : 'Suspend' }}</button></form>
                     @endif
                 </td>
                 @endif

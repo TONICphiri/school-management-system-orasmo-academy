@@ -1,8 +1,8 @@
 @php $max = max(1, $summary['total_income'], $summary['total_expenditure']); @endphp
 <div class="stats">
-    <div class="stat"><div class="label">Income</div><div class="value" style="font-size:1.35rem">{{ mwk($summary['total_income']) }}</div><div class="foot">{{ $term?->label() ?? 'All terms' }}</div></div>
-    <div class="stat amber"><div class="label">Expenditure</div><div class="value" style="font-size:1.35rem">{{ mwk($summary['total_expenditure']) }}</div></div>
-    <div class="stat {{ $summary['balance'] < 0 ? 'red' : 'blue' }}"><div class="label">Balance</div><div class="value" style="font-size:1.35rem">{{ mwk($summary['balance']) }}</div><div class="foot">{{ $summary['balance'] < 0 ? 'Spending is above income' : 'Funds remaining this term' }}</div></div>
+    <div class="stat"><div class="label">Income</div><div class="value text-[1.35rem]">{{ mwk($summary['total_income']) }}</div><div class="foot">{{ $term?->label() ?? 'All terms' }}</div></div>
+    <div class="stat amber"><div class="label">Expenditure</div><div class="value text-[1.35rem]">{{ mwk($summary['total_expenditure']) }}</div></div>
+    <div class="stat {{ $summary['balance'] < 0 ? 'red' : 'blue' }}"><div class="label">Balance</div><div class="value text-[1.35rem]">{{ mwk($summary['balance']) }}</div><div class="foot">{{ $summary['balance'] < 0 ? 'Spending is above income' : 'Funds remaining this term' }}</div></div>
 </div>
 <div class="grid grid-2">
     <div class="panel">

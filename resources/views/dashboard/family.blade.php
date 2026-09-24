@@ -14,7 +14,7 @@
             @endif
         </div>
         <div class="panel-body">
-            <div class="stats" style="margin-bottom:1rem">
+            <div class="stats mb-[1rem]">
                 <div class="stat {{ pct_tone($c['attendance'], 90, 80) }}"><div class="label">Attendance this term</div><div class="value">{{ $c['attendance'] ?? 'n/a' }}<small>{{ $c['attendance'] !== null ? '%' : '' }}</small></div><div class="foot">{{ $c['absences'] }} days absent</div></div>
                 @if ($c['report'])
                     <div class="stat blue"><div class="label">Average</div><div class="value">{{ num($c['report']['average']) }}<small>%</small></div><div class="foot">Class average {{ num($c['report']['class_average']) }}%</div></div>
@@ -31,7 +31,7 @@
                     </tbody>
                 </table>
             @else
-                <div class="alert info" style="margin:0">Results for {{ $term?->label() ?? 'this term' }} have not been released yet. You will receive a notification when the head teacher releases them.</div>
+                <div class="alert info m-0">Results for {{ $term?->label() ?? 'this term' }} have not been released yet. You will receive a notification when the head teacher releases them.</div>
             @endif
         </div>
     </div>

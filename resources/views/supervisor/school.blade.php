@@ -4,7 +4,7 @@
 @section('content')
 @php $stages = \App\Http\Controllers\School\ResultController::STAGES; @endphp
 <div class="page-head">
-    <div><h1>{{ $school->name }} <span class="badge {{ status_tone($school->status) }}" style="vertical-align:middle">{{ $school->statusLabel() }}</span></h1>
+    <div><h1>{{ $school->name }} <span class="badge {{ status_tone($school->status) }} align-middle">{{ $school->statusLabel() }}</span></h1>
     <div class="sub">{{ $school->code }} &middot; {{ $school->typeLabel() }}, {{ $school->categoryLabel() }} &middot; {{ $school->zone?->name ? $school->zone->name.' zone, ' : '' }}{{ $school->district->name }}, {{ $school->division->name }} &middot; read only</div></div>
     <div class="actions"><a class="btn" href="{{ route('supervisor.inspections.create', $school) }}">{{ icon('clipboard', 16) }} Record inspection visit</a></div>
 </div>
@@ -22,7 +22,7 @@
                 <td>{{ $r['class']->classTeacher?->name ?? '' }}@unless($r['class']->classTeacher)<span class="badge warn">Vacant</span>@endunless</td>
                 <td class="num">{{ $r['learners'] }}</td>
                 <td class="num">{{ $r['girls'] }}</td>
-                <td style="min-width:150px"><div class="progress {{ $pct < 50 ? 'red' : ($pct < 100 ? 'amber' : '') }}"><span style="width:{{ $pct }}%"></span></div><div class="small muted">{{ $r['done'] }} of {{ $r['lessons'] }}</div></td>
+                <td class="min-w-[150px]"><div class="progress {{ $pct < 50 ? 'red' : ($pct < 100 ? 'amber' : '') }}"><span style="width:{{ $pct }}%"></span></div><div class="small muted">{{ $r['done'] }} of {{ $r['lessons'] }}</div></td>
                 <td><span class="badge {{ status_tone($r['stage']) }}">{{ $stages[$r['stage']] ?? label($r['stage']) }}</span></td>
             </tr>
         @empty

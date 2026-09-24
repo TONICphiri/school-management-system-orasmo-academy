@@ -17,10 +17,10 @@
         </div>
         <button class="btn" type="submit">Verify and continue</button>
     </form>
-    <form method="POST" action="{{ route('activate.resend') }}" style="margin-top:1rem">
+    <form class="mt-[1rem]" method="POST" action="{{ route('activate.resend') }}">
         @csrf
         <input type="hidden" name="identifier" value="{{ old('identifier', $identifier) }}">
         <button class="btn secondary" type="submit" @if(! old('identifier', $identifier)) disabled title="Enter your email or phone first and try the code once" @endif>Send me a new code</button>
     </form>
-    <p class="small" style="margin-top:1rem"><a href="{{ route('login') }}">Back to sign in</a></p>
+    <p class="small mt-[1rem]"><a href="{{ route('login') }}">Back to sign in</a></p>
 @endsection

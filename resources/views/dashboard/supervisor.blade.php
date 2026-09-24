@@ -36,7 +36,7 @@
                     <td class="num">{{ $st['teachers'] }}</td>
                     <td class="num">{{ $st['qualified'] }}</td>
                     <td class="num">{{ num($st['attendance']) }}{{ $st['attendance'] !== null ? '%' : '' }}</td>
-                    <td style="min-width:130px"><div class="progress"><span style="width:{{ (int) $st['completion'] }}%"></span></div><span class="small muted">{{ num($st['completion']) }}{{ $st['completion'] !== null ? '%' : '' }}</span></td>
+                    <td class="min-w-[130px]"><div class="progress"><span style="width:{{ (int) $st['completion'] }}%"></span></div><span class="small muted">{{ num($st['completion']) }}{{ $st['completion'] !== null ? '%' : '' }}</span></td>
                     <td class="num">{{ num($st['pass_rate']) }}{{ $st['pass_rate'] !== null ? '%' : '' }}</td>
                     <td class="right"><a class="btn secondary small" href="{{ route('supervisor.inspections.create', $s) }}">New inspection</a></td>
                 </tr>

@@ -3,7 +3,7 @@
 @section('crumbs')<a href="{{ route('admin.schools.index') }}">Schools</a> / @endsection
 @section('content')
 <div class="page-head">
-    <div><h1>{{ $school->name }} <span class="badge {{ status_tone($school->status) }}" style="vertical-align:middle">{{ $school->statusLabel() }}</span></h1>
+    <div><h1>{{ $school->name }} <span class="badge {{ status_tone($school->status) }} align-middle">{{ $school->statusLabel() }}</span></h1>
     <div class="sub">{{ $school->code }} &middot; {{ $school->typeLabel() }} &middot; {{ $school->categoryLabel() }} &middot; {{ $school->structure }}</div></div>
     <div class="actions">
         <a class="btn secondary" href="{{ route('admin.schools.edit', $school) }}">{{ icon('edit', 16) }} Edit details</a>
@@ -67,7 +67,7 @@
             <form method="POST" action="{{ route('admin.schools.status', $school) }}" data-confirm="Change the status of this school? The head teacher will be notified.">
                 @csrf
                 <div class="panel-body">
-                    <div class="field" style="margin-bottom:.8rem"><label>Status</label>
+                    <div class="field mb-[.8rem]"><label>Status</label>
                         <select name="status">@foreach (\App\Models\School::STATUSES as $k => $v)<option value="{{ $k }}" @selected($school->status === $k)>{{ $v }}</option>@endforeach</select>
                     </div>
                     <div class="field"><label>Reason</label><input type="text" name="reason" placeholder="Recorded in the audit log"></div>

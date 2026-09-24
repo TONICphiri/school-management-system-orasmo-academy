@@ -18,7 +18,7 @@
                 <dt>Policies accepted</dt><dd>{{ $user->policy_accepted_at?->format('j M Y') ?? 'Not yet' }}</dd>
                 <dt>Last sign in</dt><dd>{{ $user->last_login_at?->format('j M Y, H:i') ?? 'Not recorded' }}</dd>
             </dl>
-            <p class="small muted" style="margin-top:1rem">To correct your name, email or phone number, ask your head teacher or the Ministry administrator.</p>
+            <p class="small muted mt-[1rem]">To correct your name, email or phone number, ask your head teacher or the Ministry administrator.</p>
         </div>
     </div>
     <div class="stack">
@@ -27,7 +27,7 @@
             <form method="POST" action="{{ route('account.security') }}">
                 @csrf
                 <div class="panel-body">
-                    <div class="field" style="margin-bottom:1rem">
+                    <div class="field mb-[1rem]">
                         <label for="preferred_channel">Send codes and alerts by</label>
                         <select id="preferred_channel" name="preferred_channel">
                             <option value="SMS" @selected($user->preferred_channel === 'SMS') @disabled(! $user->phone)>SMS to {{ $user->phone ?: 'no phone on record' }}</option>
@@ -49,7 +49,7 @@
                         <div class="field"><label>New password</label><input type="password" name="password" required autocomplete="new-password"></div>
                         <div class="field"><label>Confirm new password</label><input type="password" name="password_confirmation" required autocomplete="new-password"></div>
                     </div>
-                    <div class="help small muted" style="margin-top:.5rem">At least 10 characters with upper and lower case letters and a number.</div>
+                    <div class="help small muted mt-[.5rem]">At least 10 characters with upper and lower case letters and a number.</div>
                 </div>
                 <div class="panel-foot"><span></span><button class="btn" type="submit">Change password</button></div>
             </form>

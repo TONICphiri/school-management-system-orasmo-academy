@@ -11,5 +11,5 @@
         </div>
         <button class="btn" type="submit">Verify</button>
     </form>
-    <form method="POST" action="{{ route('logout') }}" style="margin-top:1rem">@csrf<button class="btn secondary" type="submit">Cancel and sign out</button></form>
+    <form class="mt-[1rem]" method="POST" action="{{ route('logout') }}">@csrf<button class="btn secondary" type="submit">Cancel and sign out</button></form>
 @endsection

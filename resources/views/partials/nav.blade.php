@@ -2,12 +2,12 @@
     $u = auth()->user();
     $link = function ($route, $label, $icon, $pattern = null, $params = [], $count = null) {
         $active = request()->routeIs($pattern ?? $route);
-        return '<a href="'.route($route, $params).'" class="'.($active ? 'active' : '').'">'.icon($icon).'<span>'.e($label).'</span>'.($count ? '<span class="count">'.$count.'</span>' : '').'</a>';
+        return '<a href="'.route($route, $params).'" class="nav-link'.($active ? ' active' : '').'">'.icon($icon).'<span>'.e($label).'</span>'.($count ? '<span class="nav-count">'.$count.'</span>' : '').'</a>';
     };
     $leader = $u->isSchoolLeader();
     $admin = $u->isSchoolAdmin();
 @endphp
-<nav class="nav">
+<nav class="flex-1 pt-2 pb-4">
     {!! $link('dashboard', 'Overview', 'home') !!}
 
     @if ($u->isSystemAdmin())

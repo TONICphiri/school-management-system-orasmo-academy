@@ -1,21 +1,22 @@
 document.addEventListener('click', function (e) {
     var toggle = e.target.closest('[data-toggle]');
-    document.querySelectorAll('.dropdown.open').forEach(function (d) {
+    document.querySelectorAll('[data-dropdown]:not(.hidden)').forEach(function (d) {
         if (!toggle || d.id !== toggle.getAttribute('data-toggle')) {
-            if (!d.contains(e.target)) d.classList.remove('open');
+            if (!d.contains(e.target)) d.classList.add('hidden');
         }
     });
     if (toggle) {
         e.preventDefault();
         var target = document.getElementById(toggle.getAttribute('data-toggle'));
-        if (target) target.classList.toggle('open');
+        if (target) target.classList.toggle('hidden');
     }
-    var menu = e.target.closest('.menu-toggle');
-    if (menu) document.querySelector('.sidebar').classList.toggle('open');
+    // The sidebar slides in on small screens
+    var menu = e.target.closest('[data-menu]');
+    if (menu) document.querySelector('[data-sidebar]').classList.toggle('max-md:-translate-x-full');
 });
 
 document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') document.querySelectorAll('.dropdown.open').forEach(function (d) { d.classList.remove('open'); });
+    if (e.key === 'Escape') document.querySelectorAll('[data-dropdown]').forEach(function (d) { d.classList.add('hidden'); });
 });
 
 // Confirm before destructive or final actions

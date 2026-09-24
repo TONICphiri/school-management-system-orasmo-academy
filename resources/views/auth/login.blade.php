@@ -17,7 +17,7 @@
         <div class="field"><label class="check"><input type="checkbox" name="remember" value="1"> Keep me signed in on this computer</label></div>
         <button class="btn" type="submit">Sign in</button>
     </form>
-    <div class="alert info" style="margin-top:1.5rem">
+    <div class="alert info mt-[1.5rem]">
         <strong>First time here?</strong> If your head teacher or the Ministry has just registered you, <a href="{{ route('activate') }}">activate your account</a> with the code you received by SMS or email.
     </div>
 @endsection

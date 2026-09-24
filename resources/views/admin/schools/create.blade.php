@@ -15,7 +15,7 @@
             <div class="form-grid four">
                 <div class="field"><label>Academic year</label><input type="text" name="year_name" value="{{ old('year_name', $startYear.'/'.($startYear + 1)) }}" required></div>
             </div>
-            <table class="table bordered compact" style="margin-top:1rem">
+            <table class="table bordered compact mt-[1rem]">
                 <thead><tr><th>Term</th><th>Opens</th><th>Closes</th><th>Break name</th><th>Break starts</th><th>Break ends</th></tr></thead>
                 <tbody>
                 @foreach ($terms as $n => $t)

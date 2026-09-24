@@ -15,7 +15,7 @@
                     <td>{{ $c->classTeacher?->name ?? '' }}@unless($c->classTeacher)<span class="badge warn">Not assigned</span>@endunless</td>
                     <td>{{ $c->room }}</td>
                     <td class="num">{{ $c->students_count }}</td>
-                    <td style="min-width:120px"><div class="progress {{ $fill > 95 ? 'red' : '' }}"><span style="width:{{ min(100, $fill) }}%"></span></div><div class="small muted">{{ $c->students_count }} of {{ $c->capacity }}</div></td>
+                    <td class="min-w-[120px]"><div class="progress {{ $fill > 95 ? 'red' : '' }}"><span style="width:{{ min(100, $fill) }}%"></span></div><div class="small muted">{{ $c->students_count }} of {{ $c->capacity }}</div></td>
                 </tr>
             @empty
                 <tr><td colspan="6" class="empty"><strong>No classes this year</strong>Add the first class to begin enrolment.</td></tr>
