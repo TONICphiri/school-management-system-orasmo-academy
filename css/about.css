@@ -1,0 +1,146 @@
+/* Reset some browser defaults */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body.body-home {
+    font-family: Arial, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  /* Navbar styling */
+  .navbar {
+    background-color: #1d2cf7;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    position: relative;
+  }
+  
+  .navbar-brand img {
+    height: 50px;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .nav-links a {
+    color: #f71a3e;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+  }
+  
+  .nav-links a:hover {
+    color: #00bcd4;
+  }
+  
+  /* Mobile toggle button */
+  .nav-toggle {
+    display: none;
+    font-size: 26px;
+    color: white;
+    cursor: pointer;
+  }
+  
+  /* About Section */
+  .about-section {
+    padding: 40px 20px;
+  }
+  
+  .card-horizontal {
+    display: flex;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(15, 19, 248, 0.1);
+    overflow: hidden;
+    max-width: 1000px;
+    margin: auto;
+    flex-wrap: wrap;
+  }
+  
+  .card-image {
+    flex: 1 1 250px;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .card-image img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .card-body {
+    flex: 2 1 400px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .card-body h3 {
+    margin-bottom: 15px;
+    font-size: 28px;
+    color: #1a237e;
+  }
+  
+  .card-body p {
+    margin-bottom: 10px;
+  }
+  
+  /* Footer */
+  .footer-nav {
+    background-color: #1d2cf7;
+    padding: 20px 0;
+    margin-top: 50px;
+  }
+  
+  .footer-nav .container {
+    text-align: center;
+    color: white;
+    font-size: 14px;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      background-color: #222;
+      position: absolute;
+      right: 0;
+      top: 65px;
+      width: 100%;
+      padding: 10px 0;
+    }
+  
+    .nav-links.show {
+      display: flex;
+    }
+  
+    .nav-toggle {
+      display: block;
+    }
+  
+    .card-horizontal {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .card-body {
+      padding: 20px;
+    }
+  
+    .card-body h3 {
+      font-size: 24px;
+    }
+  }
+  

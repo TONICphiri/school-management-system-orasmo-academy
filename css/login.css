@@ -1,0 +1,273 @@
+
+/* General Reset and Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body.body-login {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f1f1f1;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.site-header {
+  background-color: #002147;
+  color: white;
+  padding: 15px 0;
+}
+
+.container.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+}
+
+.logo {
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+}
+
+.school-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.header-nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.header-nav a:hover,
+.header-nav a.active {
+  color: #fcb900;
+}
+
+/* MAIN */
+.black-fill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e0e0e0;
+  padding: 40px 20px;
+}
+
+.login {
+    padding: 15px 20px;
+    border-radius:2px;
+    box-shadow: 0 4px 12px hsl(0, 33%, 17%);
+    width: 100%;
+    max-width: 400px;
+  }
+
+  #login {
+    width: 360px;
+    border: #f44336;
+  }
+  
+
+.login h3 {
+  text-align: center;
+  color: #002147;
+}
+
+.login img {
+  width: 60px;
+  margin-right: 50px;
+  margin-bottom: 15px;
+}
+
+.mb-3 {
+  margin-bottom: 15px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus {
+  border-color: #002147;
+}
+
+.btn {
+  background-color: #002147;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  width: 100%;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #001534;
+}
+
+.text-link {
+  display: block;
+  margin-top: 15px;
+  text-align: center;
+  color: #002147;
+  text-decoration: none;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
+/* ALERT */
+.alert {
+  padding: 10px;
+  background-color: #f44336;
+  color: white;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* FOOTER */
+.site-footer {
+  background-color: #002147;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.container.footer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer-nav {
+  margin-bottom: 10px;
+}
+
+.footer-nav a {
+  color: white;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.footer-nav a:hover {
+  color: #fcb900;
+}
+
+@media (max-width: 600px) {
+  .container.header-container,
+  .container.footer-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-nav a,
+  .footer-nav a {
+    margin: 5px 0;
+  }
+
+  .login {
+    padding: 20px;
+  }
+}
+/* BASE NAV STYLES */
+.header-nav {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .header-nav a {
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+    padding: 10px;
+    transition: color 0.3s ease;
+  }
+  
+  /* ACTIVE LINK */
+  .header-nav a.active {
+    color: rgba(135, 206, 250, 0.9);
+  }
+  
+  /* MOBILE TOGGLE BUTTON */
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+  }
+  
+  .menu-toggle span {
+    height: 3px;
+    width: 25px;
+    background: #000;
+    margin: 4px 0;
+    transition: 0.4s;
+  }
+  
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .header-container {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .menu-toggle {
+      display: flex;
+      margin-left: auto;
+      margin-bottom: 10px;
+    }
+  
+    .header-nav {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      gap: 10px;
+    }
+  
+    .header-nav.show {
+      display: flex;
+    }
+  
+    .header-nav a {
+      width: 100%;
+      padding: 12px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid #ddd;
+    }
+  }
+  
+
