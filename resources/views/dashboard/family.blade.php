@@ -22,14 +22,14 @@
                 @endif
             </div>
             @if ($c['report'])
-                <table class="table">
+                <div class="table-wrap"><table class="table">
                     <thead><tr><th>Subject</th><th class="num">Assessment (40%)</th><th class="num">Examination (60%)</th><th class="num">Final</th><th>Grade</th></tr></thead>
                     <tbody>
                     @foreach ($c['report']['rows'] as $r)
                         <tr><td>{{ $r['subject']->name }}</td><td class="num">{{ num($r['ca']) }}</td><td class="num">{{ num($r['exam']) }}</td><td class="num strong">{{ num($r['final']) }}</td><td><span class="grade {{ grade_tone($phase, $r['grade']) }}">{{ $r['grade'] ?? '' }}</span> <span class="small muted">{{ $r['label'] }}</span></td></tr>
                     @endforeach
                     </tbody>
-                </table>
+                </table></div>
             @else
                 <div class="alert info m-0">Results for {{ $term?->label() ?? 'this term' }} have not been released yet. You will receive a notification when the head teacher releases them.</div>
             @endif

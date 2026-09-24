@@ -37,7 +37,7 @@
     <div class="panel">
         <div class="panel-head"><h2>Sections</h2><span class="hint">Infant, junior and senior sections each have a section head</span></div>
         <form method="POST" action="{{ route('school.structure.sections') }}">@csrf
-            <table class="table">
+            <div class="table-wrap"><table class="table">
                 <thead><tr><th>Section</th><th>Levels</th><th>Section head</th></tr></thead>
                 <tbody>
                 @foreach ($sections as $s)
@@ -45,7 +45,7 @@
                         <td>@if($admin)<select name="heads[{{ $s->id }}]"><option value="">Not assigned</option>@foreach ($staff as $u)<option value="{{ $u->id }}" @selected($s->head_id === $u->id)>{{ $u->name }}</option>@endforeach</select>@else{{ $s->head?->name ?? 'Not assigned' }}@endif</td></tr>
                 @endforeach
                 </tbody>
-            </table>
+            </table></div>
             @if($admin)<div class="panel-foot"><span></span><button class="btn secondary" type="submit">Save section heads</button></div>@endif
         </form>
     </div>
@@ -55,7 +55,7 @@
     <div class="panel">
         <div class="panel-head"><h2>Departments</h2><span class="hint">Heads of department validate subject marks</span></div>
         <form method="POST" action="{{ route('school.structure.departments.heads') }}">@csrf
-            <table class="table">
+            <div class="table-wrap"><table class="table">
                 <thead><tr><th>Department</th><th>Subjects</th><th>Head of department</th></tr></thead>
                 <tbody>
                 @forelse ($departments as $d)
@@ -65,7 +65,7 @@
                     <tr><td colspan="3" class="empty">No departments yet.</td></tr>
                 @endforelse
                 </tbody>
-            </table>
+            </table></div>
             @if($admin)<div class="panel-foot"><span></span><button class="btn secondary" type="submit">Save heads</button></div>@endif
         </form>
         @if($admin)

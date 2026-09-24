@@ -44,7 +44,7 @@
                     {{ icon('bell', 19) }}
                     @if ($bellCount)<span class="absolute -top-1.5 -right-1.5 grid h-[19px] min-w-[19px] place-items-center bg-danger px-1 text-[.7rem] font-bold text-white">{{ $bellCount > 99 ? '99+' : $bellCount }}</span>@endif
                 </button>
-                <div data-dropdown id="bell-panel" class="absolute top-[calc(100%+8px)] right-0 z-40 hidden w-[380px] border border-line bg-panel shadow-[0_8px_24px_rgba(20,30,25,.12)] max-md:w-[320px]">
+                <div data-dropdown id="bell-panel" class="absolute top-[calc(100%+8px)] right-0 z-40 hidden w-[380px] border border-line bg-panel shadow-[0_8px_24px_rgba(20,30,25,.12)] max-md:fixed max-md:inset-x-2 max-md:top-[64px] max-md:w-auto">
                     <div class="flex items-center justify-between border-b border-line px-[.9rem] py-[.7rem]">
                         <strong class="text-[.9rem]">Notifications</strong>
                         @if ($bellCount)

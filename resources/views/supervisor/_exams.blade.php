@@ -1,6 +1,6 @@
 <div class="panel">
     <div class="panel-head"><h2>National examination readiness</h2><span class="hint">From this term's school results</span></div>
-    <table class="table">
+    <div class="table-wrap"><table class="table">
         <thead><tr><th>Examination</th><th class="num">Candidates</th><th class="num">With marks</th><th class="num">Meeting the standard</th><th>Rate</th><th class="num">Girls meeting it</th></tr></thead>
         <tbody>
         @forelse ($exams as $e)
@@ -16,5 +16,5 @@
             <tr><td colspan="6" class="muted">No examination classes this year.</td></tr>
         @endforelse
         </tbody>
-    </table>
+    </table></div>
 </div>

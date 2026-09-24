@@ -7,7 +7,7 @@
 <div class="grid grid-2">
     <div class="panel">
         <div class="panel-head"><h2>Income by source</h2></div>
-        <table class="table">
+        <div class="table-wrap"><table class="table">
             <tbody>
             @forelse ($summary['income'] as $r)
                 <tr><td>{{ \App\Models\FinanceEntry::INCOME[$r->category] ?? $r->category }}<div class="progress"><span style="width:{{ round($r->total / $max * 100) }}%"></span></div></td><td class="num strong">{{ mwk($r->total) }}</td></tr>
@@ -15,11 +15,11 @@
                 <tr><td class="muted">No income recorded for this term.</td></tr>
             @endforelse
             </tbody>
-        </table>
+        </table></div>
     </div>
     <div class="panel">
         <div class="panel-head"><h2>Expenditure by area</h2></div>
-        <table class="table">
+        <div class="table-wrap"><table class="table">
             <tbody>
             @forelse ($summary['expenditure'] as $r)
                 <tr><td>{{ \App\Models\FinanceEntry::EXPENDITURE[$r->category] ?? $r->category }}<div class="progress amber"><span style="width:{{ round($r->total / $max * 100) }}%"></span></div></td><td class="num strong">{{ mwk($r->total) }}</td></tr>
@@ -27,6 +27,6 @@
                 <tr><td class="muted">No expenditure recorded for this term.</td></tr>
             @endforelse
             </tbody>
-        </table>
+        </table></div>
     </div>
 </div>

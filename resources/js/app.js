@@ -11,12 +11,18 @@ document.addEventListener('click', function (e) {
         if (target) target.classList.toggle('hidden');
     }
     // The sidebar slides in on small screens
+    var sidebar = document.querySelector('[data-sidebar]');
     var menu = e.target.closest('[data-menu]');
-    if (menu) document.querySelector('[data-sidebar]').classList.toggle('max-md:-translate-x-full');
+    if (menu && sidebar) sidebar.classList.toggle('max-md:-translate-x-full');
+    else if (sidebar && !sidebar.contains(e.target)) sidebar.classList.add('max-md:-translate-x-full');
 });
 
 document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') document.querySelectorAll('[data-dropdown]').forEach(function (d) { d.classList.add('hidden'); });
+    if (e.key === 'Escape') {
+        document.querySelectorAll('[data-dropdown]').forEach(function (d) { d.classList.add('hidden'); });
+        var sidebar = document.querySelector('[data-sidebar]');
+        if (sidebar) sidebar.classList.add('max-md:-translate-x-full');
+    }
 });
 
 // Confirm before destructive or final actions

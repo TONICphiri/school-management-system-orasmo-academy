@@ -34,7 +34,7 @@
 @unless ($readOnly)
 <div class="panel">
     <div class="panel-head"><h2>Entries this term</h2><span class="hint">{{ $entries->count() }} entries</span></div>
-    <table class="table">
+    <div class="table-wrap"><table class="table">
         <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Reference</th><th class="num">Amount</th><th>Recorded by</th>@if($canRecord)<th></th>@endif</tr></thead>
         <tbody>
         @forelse ($entries as $e)
@@ -51,7 +51,7 @@
             <tr><td colspan="7" class="muted">No entries for this term.</td></tr>
         @endforelse
         </tbody>
-    </table>
+    </table></div>
 </div>
 @endunless
 @endsection

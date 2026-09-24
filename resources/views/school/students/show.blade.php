@@ -56,7 +56,7 @@
     </div>
     <div class="panel">
         <div class="panel-head"><h2>School history</h2></div>
-        <table class="table">
+        <div class="table-wrap"><table class="table">
             <thead><tr><th>School</th><th>Last class</th><th>Year</th><th>Reason</th></tr></thead>
             <tbody>
                 <tr><td><strong>{{ current_school()->name }}</strong><div class="small muted">Current</div></td><td>{{ $student->schoolClass?->name() }}</td><td>{{ $student->admitted_on?->year }}</td><td><span class="badge {{ status_tone($student->status) }}">{{ label($student->status) }}</span></td></tr>
@@ -67,7 +67,7 @@
                     <tr><td>{{ $h->school_name }}@if($h->school_code)<div class="small muted">{{ $h->school_code }}</div>@endif</td><td>{{ $h->last_class ?: 'Not recorded' }}</td><td>{{ $h->year_left }}</td><td>{{ $h->reason }}</td></tr>
                 @endforeach
             </tbody>
-        </table>
+        </table></div>
         @if($canEdit)
         <form method="POST" action="{{ route('school.students.history', $student) }}" class="panel-foot inline-form">@csrf
             <input type="text" name="school_name" placeholder="Previous school" required>
